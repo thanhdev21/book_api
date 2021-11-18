@@ -26,6 +26,7 @@
     "graphql-request": "^3.6.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "mongoose": "^6.0.13",
     "nodemon": "^2.0.15"
   }
 }
