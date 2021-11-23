@@ -2,9 +2,10 @@ import { genUserToken } from '@business/auth';
 import { RoleCodes, UserTokenType } from '@constants/enum';
 import { Jwt, User } from '@graphql/types/generated-graphql-types';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import ms from 'ms';
 
-const jwtSecretKey = process.env.JWT_SECRET_KEY;
+const jwtSecretKey = process.env.JWT_SECRET;
 
 export enum JWTAuthTokenType {
   ID_TOKEN = 'ID_TOKEN',
@@ -13,8 +14,8 @@ export enum JWTAuthTokenType {
 }
 
 export interface JWTAuthTokenPayload {
-  tokenId: string;
-  userId: number;
+  tokenId: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Schema.Types.ObjectId;
   email?: string;
   username?: string;
   iat?: number;
@@ -25,9 +26,9 @@ export interface JWTAuthTokenPayload {
 }
 
 export interface JWTClientAuthPayload {
-  tokenId: string;
+  tokenId: mongoose.Schema.Types.ObjectId;
   clientId?: string;
-  uid: number;
+  uid: mongoose.Schema.Types.ObjectId;
   iat?: number;
   exp?: number;
   type: JWTAuthTokenType;
@@ -61,7 +62,7 @@ export const verifyRefreshToken = async (refreshToken: string): Promise<JWTRefre
   });
 };
 
-export const signAuthToken = async (tokenData: { userId: number; metaId: number }) => {
+export const signAuthToken = async (tokenData: { userId: mongoose.Schema.Types.ObjectId; metaId: number }) => {
   const userToken = await genUserToken(tokenData.userId, UserTokenType.REFRESH_TOKEN);
 
   const data: JWTAuthTokenPayload = {
@@ -96,7 +97,7 @@ export const signAuthToken = async (tokenData: { userId: number; metaId: number 
   };
 };
 
-export const signClientAuthToken = async (tokenData: { uid: number; clientId: string; nameOfUser: string; role: RoleCodes }) => {
+export const signClientAuthToken = async (tokenData: { uid: mongoose.Schema.Types.ObjectId; clientId: string; nameOfUser: string; role: RoleCodes }) => {
   const userToken = await genUserToken(tokenData.uid, UserTokenType.REFRESH_TOKEN);
 
   const data: JWTClientAuthPayload = {

@@ -6,14 +6,13 @@ import UserTokenModel from '@/models/userToken';
 import { dateNow } from '@utils/date';
 import { v4 } from 'uuid';
 import ClientModel from '@/models/client';
+import mongoose from 'mongoose';
 
-export const genUserToken = async (parentId: number, userTokenType: UserTokenType, expiresInSeconds: number = 600) => {
+export const genUserToken = async (parentId: mongoose.Schema.Types.ObjectId, userTokenType: UserTokenType, expiresInSeconds: number = 600) => {
   const userTokenRepo = new UserTokenModel({
     expiresAt: dateNow() + expiresInSeconds,
-    tokenId: `${v4()}-${v4()}`,
     type: userTokenType,
     user: parentId,
-    createdAt: dateNow(),
   });
   return userTokenRepo.save();
 };

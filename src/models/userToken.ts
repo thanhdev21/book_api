@@ -12,7 +12,7 @@ const UserTokenSchema = new mongoose.Schema<UserToken>(
     type: { type: Number, required: false },
     tokenId: { type: mongoose.Schema.Types.ObjectId, required: false },
     expiresAt: { type: Number, required: false },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
   },
   { timestamps: true },
 );

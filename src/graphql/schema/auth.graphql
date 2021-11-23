@@ -46,7 +46,6 @@ type JWT {
 input MutationLoginInput {
   email: String!
   password: String!
-  otp: Int
 }
 
 input VerifyClientInput {
