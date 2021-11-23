@@ -6,20 +6,22 @@ interface User {
   email: string;
   password: string;
   isConfirmed: boolean;
-  confirmOTP?: string | null | number;
-  otpTries?: number;
+  confirmOTP?: string;
+  otpTries?: boolean;
   status: boolean;
+  // _id: mongoose.Schema.Types.ObjectId;
 }
 
 const UserSchema = new mongoose.Schema<User>(
   {
+    // _id: { type: mongoose.Schema.Types.ObjectId, required: false },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
     isConfirmed: { type: Boolean, required: true, default: false },
     confirmOTP: { type: String, required: false },
-    otpTries: { type: Number, required: false, default: 0 },
+    otpTries: { type: Boolean, required: false, default: false },
     status: { type: Boolean, required: true, default: true },
   },
   { timestamps: true },

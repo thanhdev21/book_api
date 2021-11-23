@@ -6,6 +6,13 @@ import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import { makeGraphqlError } from '@utils/error';
 import env from './env';
+import loaders from '@services/loader';
+import AuthMiddleware from '@/middleware/auth';
+import schemaWithResolvers from '@graphql/schema';
+import mongoose from 'mongoose';
+import { GraphQLContext, GraphqlContextAuth } from '@graphql/types/graphql';
+import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 
 const PORT = env.apiPort ? env.apiPort : 32001;
 
@@ -26,9 +33,8 @@ app.use('/upload/', express.static('public'));
 app.use(AuthMiddleware.process);
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-app.use('/', appRouter);
 app.get('/', (_: express.Request, res: express.Response) => {
-  return res.send('Hello site-plan Server!');
+  return res.send('Hello book-shop Server!');
 });
 
 /**
@@ -42,28 +48,27 @@ const server = new ApolloServer({
     return graphqlContext(req.auth);
   },
   formatError: (err) => {
-    if (err && err.extensions && err.extensions.exception.name === 'ValidationError') {
+    if (err && err.extensions && err.extensions.exception.code === 'ValidationError') {
       return makeGraphqlError(err.message, ErrorCodes.GraphqlValidationFailed);
     }
     return err;
   },
   schema: schemaWithResolvers,
-  subscriptions: {
-    onConnect: async (connectionParam: any, webSocket, context) => {
-      try {
-        const { authorization } = connectionParam;
-        if (authorization) {
-          // const auth = await subscriptionsAuthentication(authorization);
-          // return graphqlContext(auth);
-        }
-        throw makeGraphqlError('Missing authorization token', ErrorCodes.Unauthenticated);
-      } catch (err) {
-        throw new AuthenticationError(err);
-      }
-    },
-  },
-  playground: true,
-  tracing: false,
+  // subscriptions: {
+  // onConnect: async (connectionParam: any, webSocket, context) => {
+  //   try {
+  //     const { authorization } = connectionParam;
+  //     if (authorization) {
+  //       // const auth = await subscriptionsAuthentication(authorization);
+  //       // return graphqlContext(auth);
+  //     }
+  //     throw makeGraphqlError('Missing authorization token', ErrorCodes.Unauthenticated);
+  //   } catch (err) {
+  //     throw new AuthenticationError(err);
+  //   }
+  // },
+  // },
+  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   introspection: true,
   logger: null,
 });
@@ -75,12 +80,13 @@ const httpServer = createServer(app);
  * func to start server
  */
 const run = async () => {
-  await databaseConnection().then(async () => {
-    console.log(`🌧️  Database connected on port ${env.databasePort}
+  await mongoose.connect(process.env.MONGODB_URL, {}).then(async () => {
+    console.log(`🌧️  Mongodb connect
     
     🌧️`);
   });
-  server.installSubscriptionHandlers(httpServer);
+  // server.installSubscriptionHandlers(httpServer);
+  await server.start();
   server.applyMiddleware({ app, cors: true });
   httpServer.listen(PORT);
   return httpServer;
@@ -99,4 +105,4 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
-export { httpServer, databaseConnection, run };
+export { httpServer, run };

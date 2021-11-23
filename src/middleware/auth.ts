@@ -4,6 +4,7 @@ import { verifyToken, JWTAuthTokenType } from '@utils/jwt';
 import { GraphqlContextAuth } from '@graphql/types/graphql';
 
 import UserModel from '@/models/user';
+import { RoleCodes, User } from '@graphql/types/generated-graphql-types';
 
 export default {
   async process(
@@ -25,7 +26,8 @@ export default {
 
         if (user) {
           req.auth = {
-            uid: user.id,
+            uid: user._id,
+            role: RoleCodes.USER,
             ipAddress: req.headers['x-real-ip'] || req.connection.remoteAddress,
             metaData: { user: user },
           };

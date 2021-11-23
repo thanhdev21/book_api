@@ -1,0 +1,19 @@
+# import * from "./base.graphql"
+# import * from "./user.graphql"
+
+type Mutation {
+  foo: String
+}
+
+type Query {
+  getAllBooks: [Book!]!
+  getBook(id: ID!): Book!
+}
+
+type Book {
+  _id: ID!
+  title: String!
+  description: String!
+  isbn: String!
+  user: User!
+}

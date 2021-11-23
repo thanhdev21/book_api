@@ -24,12 +24,12 @@ export enum Stage {
 export interface ENV {
   apiPort?: string;
   stage: Stage;
-  databaseServer?: string;
-  databaseName?: string;
-  databaseUsername?: string;
-  databasePassword?: string;
-  databasePort?: number;
-
+  mongodb_url: string;
+  port: string;
+  email_smtp_host: string;
+  email_smtp_port: string;
+  email_smtp_username: string;
+  email_smtp_password: string;
   root: string;
 
   //   redisPort: number;
@@ -52,23 +52,12 @@ const root = __dirname.replace(`${cwd}`, '.');
 const env: ENV = {
   stage: process.env.STAGE ? (process.env.STAGE as Stage) : Stage.Dev,
   root,
-  databaseServer: process.env.DATABASE_SERVER,
-  databaseName: process.env.DATABASE_NAME,
-  databaseUsername: process.env.DATABASE_USERNAME,
-  databasePassword: process.env.DATABASE_PASSWORD,
-  databasePort: parseInt(process.env.DATABASE_PORT),
-  apiPort: process.env.API_PORT,
-  //   redisPort: parseInt(process.env.REDIS_PORT),
-  //   redisHost: process.env.REDIS_HOST,
-  //   typeormEntitiesDir: process.env.TYPEORM_ENTITIES_DIR,
-  //   typeormMigrationsDir: process.env.TYPEORM_MIGRATIONS_DIR,
-  //   typeormEntities: process.env.TYPEORM_ENTITIES,
-  //   typeormMigrations: process.env.TYPEORM_MIGRATIONS,
-  //   videoDir: process.env.VIDEO_DIR,
-  //   imageDir: process.env.IMAGE_DIR,
-  //   videoScreenshotsDir: process.env.VIDEO_SCREENSHOTS_DIR,
-  //   cdnImageDomain: process.env.CDN_IMAGE_DOMAIN,
-  //   cdnVideoDomain: process.env.CDN_VIDEO_DOMAIN,
+  mongodb_url: process.env.MONGODB_URL,
+  email_smtp_host: process.env.EMAIL_SMTP_HOST,
+  port: process.env.PORT,
+  email_smtp_password: process.env.EMAIL_SMTP_PASSWORD,
+  email_smtp_port: process.env.EMAIL_SMTP_PORT,
+  email_smtp_username: process.env.EMAIL_SMTP_USERNAME,
 };
 
 for (const e in env) {

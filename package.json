@@ -3,17 +3,25 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gen:types": "graphql-codegen",
+    "start": "nodemon ./src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/typescript-graphql-request": "^4.3.1",
+    "@graphql-codegen/typescript-operations": "^2.2.1",
+    "@graphql-codegen/typescript-resolvers": "^2.4.2",
+    "@types/bcrypt": "^5.0.0",
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@types/nodemailer": "^6.4.4",
     "apollo-server": "^3.5.0",
     "apollo-server-express": "^3.5.0",
     "bcrypt": "^5.0.1",
@@ -24,9 +32,13 @@
     "graphql": "^16.0.1",
     "graphql-import": "^1.0.2",
     "graphql-request": "^3.6.1",
+    "graphql-tools": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "moment": "^2.29.1",
     "mongoose": "^6.0.13",
-    "nodemon": "^2.0.15"
+    "nodemailer": "^6.7.1",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2"
   }
 }

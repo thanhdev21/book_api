@@ -12,10 +12,10 @@ const BookSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     isbn: { type: String, required: true },
-    user: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Types.ObjectId, ref: 'users', required: true },
   },
   { timestamps: true },
 );
-const BookModel = mongoose.model('Book', BookSchema);
+const BookModel = mongoose.model('books', BookSchema);
 
 export default BookModel;

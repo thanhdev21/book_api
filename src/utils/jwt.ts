@@ -1,4 +1,6 @@
-import UserModel from '@/models/user';
+import { genUserToken } from '@business/auth';
+import { RoleCodes, UserTokenType } from '@constants/enum';
+import { Jwt, User } from '@graphql/types/generated-graphql-types';
 import jwt from 'jsonwebtoken';
 import ms from 'ms';
 
@@ -60,9 +62,11 @@ export const verifyRefreshToken = async (refreshToken: string): Promise<JWTRefre
 };
 
 export const signAuthToken = async (tokenData: { userId: number; metaId: number }) => {
+  const userToken = await genUserToken(tokenData.userId, UserTokenType.REFRESH_TOKEN);
+
   const data: JWTAuthTokenPayload = {
     ...tokenData,
-    tokenId: userToken.tokenId,
+    tokenId: userToken._id,
     type: JWTAuthTokenType.ID_TOKEN,
   };
 
@@ -97,7 +101,7 @@ export const signClientAuthToken = async (tokenData: { uid: number; clientId: st
 
   const data: JWTClientAuthPayload = {
     ...tokenData,
-    tokenId: userToken.tokenId,
+    tokenId: userToken._id,
     type: JWTAuthTokenType.ID_TOKEN,
   };
 
@@ -141,7 +145,7 @@ export const signNormalToken = (data: { uid: number }, type: JWTAuthTokenType, e
 
 export const buildJWTResponse = async (user: User, metaId: number): Promise<Jwt> => {
   const token = await signAuthToken({
-    userId: user.id,
+    userId: user._id,
     metaId,
   });
   return {
