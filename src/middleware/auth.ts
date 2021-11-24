@@ -1,41 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import { verifyToken, JWTAuthTokenType } from '@utils/jwt';
+import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import { makeGraphqlError } from '@utils/error';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { GraphqlContextAuth } from '@graphql/types/graphql';
+export const checkAuth = (context) => {
+  const authHeader = context.req.headers.authorization;
 
-import UserModel from '@/models/user';
-import { RoleCodes, User } from '@graphql/types/generated-graphql-types';
-
-export default {
-  async process(
-    req: Request & {
-      auth?: GraphqlContextAuth;
-    },
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      if (!req.headers.authorization || !req.headers.authorization.replace('Bearer', '')) {
-        return next();
+  if (authHeader) {
+    // Bearer ....
+    const token = authHeader.split('Bearer ')[1];
+    if (token) {
+      try {
+        const user: JwtPayload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+        return user;
+      } catch (err) {
+        throw makeGraphqlError('Invalid/Expired token', ErrorCodes.Unauthenticated);
       }
-      const decodedToken = await verifyToken(req.headers.authorization.replace('Bearer', ''));
-      if (decodedToken.type === JWTAuthTokenType.ID_TOKEN && decodedToken && decodedToken.uid) {
-        const { clientId, uid, nameOfUser } = decodedToken;
-
-        const user: User = await UserModel.findById(decodedToken.uid);
-
-        if (user) {
-          req.auth = {
-            uid: user._id,
-            role: RoleCodes.USER,
-            ipAddress: req.headers['x-real-ip'] || req.connection.remoteAddress,
-            metaData: { user: user },
-          };
-        }
-      }
-      return next();
-    } catch (err) {
-      return next();
     }
-  },
+    throw makeGraphqlError("Authentication token must be 'Bearer [token]", ErrorCodes.Unauthenticated);
+  }
+  throw makeGraphqlError('Authorization header must be provided', ErrorCodes.Unauthenticated);
 };

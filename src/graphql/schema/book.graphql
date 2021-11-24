@@ -2,12 +2,12 @@
 # import * from "./user.graphql"
 
 type Mutation {
-  foo: String
+  createBook(input: CreateBookInput!): Book! @auth(requires: [CLIENT])
 }
 
 type Query {
-  getAllBooks: [Book!]!
-  getBook(id: ID!): Book!
+  getAllBooks(pageIndex: Int = 1, pageSize: Int = 20): Books! @auth(requires: [CLIENT])
+  getBook(id: ID!): Book! @auth(requires: [CLIENT])
 }
 
 type Book {
@@ -16,4 +16,15 @@ type Book {
   description: String!
   isbn: String!
   user: User!
+}
+
+type Books {
+  items: [Book!]!
+  paginate: Paginate
+}
+
+input CreateBookInput {
+  title: String!
+  description: String!
+  isbn: String!
 }

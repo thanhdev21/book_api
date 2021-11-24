@@ -8,9 +8,9 @@ import bcrypt from 'bcrypt';
 export const login: MutationResolvers['login'] = async (_, { data }) => {
   const { email, password } = data;
   const { isValid, error } = validatorLogin(data);
- 
-  const user = await UserModel.findOne({email});
-  
+
+  const user = await UserModel.findOne({ email });
+
   if (!user) {
     throw makeGraphqlError('User does not already exist!', ErrorCodes.GraphqlValidationFailed);
   }
@@ -19,12 +19,13 @@ export const login: MutationResolvers['login'] = async (_, { data }) => {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
   }
 
-  const isMatch = await bcrypt.compare(password, user.password)
+  const isMatch = await bcrypt.compare(password, user.password);
 
-  if(!isMatch){ throw makeGraphqlError('Wrong password!', ErrorCodes.BadUserInput)}
+  if (!isMatch) {
+    throw makeGraphqlError('Wrong password!', ErrorCodes.BadUserInput);
+  }
 
-  const response = await buildJWTResponse(user, 12)
+  const response = await buildJWTResponse(user);
 
- return response
-
+  return response;
 };

@@ -7,12 +7,12 @@ export interface BookSchema {
   user: mongoose.Types.ObjectId;
 }
 
-const BookSchema = new mongoose.Schema(
+const BookSchema = new mongoose.Schema<BookSchema>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
     isbn: { type: String, required: true },
-    user: { type: mongoose.Types.ObjectId, ref: 'users', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
   },
   { timestamps: true },
 );

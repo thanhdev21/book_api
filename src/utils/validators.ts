@@ -1,4 +1,4 @@
-import { MutationLoginInput, RegisterInput } from '@graphql/types/generated-graphql-types';
+import { CreateBookInput, MutationLoginInput, RegisterInput } from '@graphql/types/generated-graphql-types';
 import e from 'express';
 
 export const validatorRegister = (input: RegisterInput) => {
@@ -22,9 +22,8 @@ export const validatorRegister = (input: RegisterInput) => {
   return { error, isValid: Object.keys(error).length < 1 };
 };
 
-
-export const validatorLogin = (input: MutationLoginInput)=>{
-  const {email, password}= input
+export const validatorLogin = (input: MutationLoginInput) => {
+  const { email, password } = input;
   const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let error: any = {};
   if (email.trim().length === 0) {
@@ -38,4 +37,25 @@ export const validatorLogin = (input: MutationLoginInput)=>{
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };
-}
+};
+
+export const validatorCreatBook = (input: CreateBookInput) => {
+  const { description, title, isbn } = input;
+
+  let error: any = {};
+  if (title.trim().length === 0) {
+    error.message = 'title is required';
+  } else if (title.trim().length > 255) {
+    error.message = ' Max 255 alphanumeric characters';
+  } else if (description.trim().length === 0) {
+    error.message = 'description is required';
+  } else if (description.trim().length > 255) {
+    error.message = 'Max 255 alphanumeric character';
+  } else if (isbn.trim().length === 0) {
+    error.message = 'isbn is required';
+  } else if (description.trim().length > 255) {
+    error.message = 'Max 255 alphanumeric character';
+  } else error = {};
+
+  return { error, isValid: Object.keys(error).length < 1 };
+};

@@ -1,38 +1,28 @@
-import './alias-modules';
-import express from 'express';
-import cors from 'cors';
-import { createServer } from 'http';
-import { ApolloServer, AuthenticationError } from 'apollo-server-express';
-import bodyParser from 'body-parser';
-import { makeGraphqlError } from '@utils/error';
-import env from './env';
-import loaders from '@services/loader';
-import AuthMiddleware from '@/middleware/auth';
-import schemaWithResolvers from '@graphql/schema';
-import mongoose from 'mongoose';
-import { GraphQLContext, GraphqlContextAuth } from '@graphql/types/graphql';
-import { ErrorCodes } from '@graphql/types/generated-graphql-types';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { ApolloServer } from 'apollo-server-express';
+import cors from 'cors';
+import express from 'express';
+import { createServer } from 'http';
+import mongoose from 'mongoose';
+import './alias-modules';
+import env from './env';
+import schemaWithResolvers from '@graphql/schema';
+import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import loaders from '@services/loader';
+import { makeGraphqlError } from '@utils/error';
 
-const PORT = env.apiPort ? env.apiPort : 32001;
+const PORT = env.port ? env.port : 32001;
 
 /**
  *
  * @param auth need to build graphql context
  */
-const graphqlContext = (auth: GraphQLContext['auth']) => {
-  return {
-    auth,
-    loaders,
-  };
-};
 
 const app = express();
 app.use(cors());
 app.use('/upload/', express.static('public'));
-app.use(AuthMiddleware.process);
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.get('/', (_: express.Request, res: express.Response) => {
   return res.send('Hello book-shop Server!');
 });
@@ -41,18 +31,14 @@ app.get('/', (_: express.Request, res: express.Response) => {
  * create graphql server
  */
 const server = new ApolloServer({
-  context: ({ req, connection }: { req: express.Request & { auth?: GraphqlContextAuth }; connection: any }) => {
-    if (connection) {
-      return connection.context;
-    }
-    return graphqlContext(req.auth);
-  },
+  context: ({ req }) => ({ req }),
   formatError: (err) => {
     if (err && err.extensions && err.extensions.exception.code === 'ValidationError') {
       return makeGraphqlError(err.message, ErrorCodes.GraphqlValidationFailed);
     }
     return err;
   },
+
   schema: schemaWithResolvers,
   // subscriptions: {
   // onConnect: async (connectionParam: any, webSocket, context) => {
@@ -81,9 +67,7 @@ const httpServer = createServer(app);
  */
 const run = async () => {
   await mongoose.connect(process.env.MONGODB_URL, {}).then(async () => {
-    console.log(`🌧️  Mongodb connect
-    
-    🌧️`);
+    console.log(`🌧️  Mongodb connected 🌧️`);
   });
   // server.installSubscriptionHandlers(httpServer);
   await server.start();
@@ -98,7 +82,7 @@ const run = async () => {
 if (process.env.NODE_ENV !== 'test') {
   run()
     .then(() => {
-      console.log(`🍼  GraphQL server listen at: http://localhost:${PORT}/graphql🚀 `);
+      console.log(`🍼  🚀  GraphQL server listen at: http://localhost:${PORT}/graphql`);
     })
     .catch((err) => {
       console.log(err);

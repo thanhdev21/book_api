@@ -62,11 +62,12 @@ export const verifyRefreshToken = async (refreshToken: string): Promise<JWTRefre
   });
 };
 
-export const signAuthToken = async (tokenData: { userId: mongoose.Schema.Types.ObjectId; metaId: number }) => {
+export const signAuthToken = async (tokenData: { userId: mongoose.Schema.Types.ObjectId }) => {
   const userToken = await genUserToken(tokenData.userId, UserTokenType.REFRESH_TOKEN);
 
   const data: JWTAuthTokenPayload = {
     ...tokenData,
+    metaId: userToken._id,
     tokenId: userToken._id,
     type: JWTAuthTokenType.ID_TOKEN,
   };
@@ -144,16 +145,16 @@ export const signNormalToken = (data: { uid: number }, type: JWTAuthTokenType, e
   };
 };
 
-export const buildJWTResponse = async (user: User, metaId: number): Promise<Jwt> => {
+export const buildJWTResponse = async (user: User): Promise<Jwt> => {
   const token = await signAuthToken({
     userId: user._id,
-    metaId,
   });
   return {
-    uid: metaId,
+    uid: user._id,
     expiresAt: token.expiresAt,
     refreshToken: token.refreshToken,
     token: token.token,
+    payload: user,
     refreshTokenExpiresAt: token.refreshTokenExpiresAt,
   };
 };
