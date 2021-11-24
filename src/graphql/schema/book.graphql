@@ -16,6 +16,8 @@ type Book {
   description: String!
   isbn: String!
   user: User!
+  createdAt:Date
+  updatedAt:Date
 }
 
 type Books {

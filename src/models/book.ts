@@ -4,10 +4,10 @@ export interface BookSchema {
   title: string;
   description: string;
   isbn: string;
-  user: mongoose.Types.ObjectId;
+  user: mongoose.Schema.Types.ObjectId;
 }
 
-const BookSchema = new mongoose.Schema<BookSchema>(
+const BookSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
