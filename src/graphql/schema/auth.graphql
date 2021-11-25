@@ -13,6 +13,10 @@ type Mutation {
   forgotPassword(email: String!): Boolean!
   resetPassword(token: String!, password: String!): Boolean!
 
+  verifyEmail(input: VerifyEmailInput!): Boolean!
+
+  resendOtp(email: String!): Boolean!
+
   register(registerInput: RegisterInput!): Boolean!
 
   # changePassword(data: ChangePasswordInput!): Boolean! @auth
@@ -33,7 +37,6 @@ type ClientJWT {
 type ClientPayload {
   nameOfUser: String!
 }
-
 type JWT {
   token: String!
   refreshToken: String!
@@ -59,4 +62,9 @@ input RegisterInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input VerifyEmailInput {
+  email: String!
+  otp: String!
 }

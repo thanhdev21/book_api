@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 export const register: MutationResolvers['register'] = async (_, { registerInput }) => {
   const { email, password, firstName, lastName } = registerInput;
   const { isValid, error } = validatorRegister(registerInput);
-  let otp = randomNumber(4);
+  const otp = randomNumber(4);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -27,6 +27,7 @@ export const register: MutationResolvers['register'] = async (_, { registerInput
     firstName,
     lastName,
     password: hashPassword,
+    confirmOTP: otp,
   });
 
   return mailer

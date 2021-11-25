@@ -1,3 +1,4 @@
+import UserModel from '@/models/user';
 import { ErrorCodes } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -19,4 +20,10 @@ export const checkAuth = (context) => {
     throw makeGraphqlError("Authentication token must be 'Bearer [token]", ErrorCodes.Unauthenticated);
   }
   throw makeGraphqlError('Authorization header must be provided', ErrorCodes.Unauthenticated);
+};
+
+export const checkVerified = async (userId) => {
+  const user = await UserModel.findById(userId);
+  if (user.isConfirmed) return true;
+  return false;
 };

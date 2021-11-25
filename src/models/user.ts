@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema<User>(
     email: { type: String, required: true },
     password: { type: String, required: true },
     isConfirmed: { type: Boolean, required: true, default: false },
-    confirmOTP: { type: String, required: false },
+    confirmOTP: { type: String, required: false, nullable: true },
     otpTries: { type: Boolean, required: false, default: false },
     status: { type: Boolean, required: true, default: true },
   },

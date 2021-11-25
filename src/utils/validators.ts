@@ -1,9 +1,9 @@
-import { CreateBookInput, MutationLoginInput, RegisterInput } from '@graphql/types/generated-graphql-types';
-import e from 'express';
+import { EMAIL_REGEX } from '@constants/reg';
+import { CreateBookInput, MutationLoginInput, RegisterInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 
 export const validatorRegister = (input: RegisterInput) => {
   const { email, password, firstName, lastName } = input;
-  const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   let error: any = {};
   if (firstName.trim().length === 0) {
     error.message = 'firstName is required';
@@ -11,7 +11,7 @@ export const validatorRegister = (input: RegisterInput) => {
     error.message = 'lastName is required';
   } else if (email.trim().length === 0) {
     error.message = 'email is required';
-  } else if (!email.match(emailReg)) {
+  } else if (!email.match(EMAIL_REGEX)) {
     error.message = 'email is invalid';
   } else if (password.trim().length === 0) {
     error.message = 'password is required';
@@ -24,11 +24,11 @@ export const validatorRegister = (input: RegisterInput) => {
 
 export const validatorLogin = (input: MutationLoginInput) => {
   const { email, password } = input;
-  const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   let error: any = {};
   if (email.trim().length === 0) {
     error.message = 'email is required';
-  } else if (!email.match(emailReg)) {
+  } else if (!email.match(EMAIL_REGEX)) {
     error.message = 'email is invalid';
   } else if (password.trim().length === 0) {
     error.message = 'password is required';
@@ -57,5 +57,30 @@ export const validatorCreatBook = (input: CreateBookInput) => {
     error.message = 'Max 255 alphanumeric character';
   } else error = {};
 
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorVerifyEmail = (input: VerifyEmailInput) => {
+  const { email, otp } = input;
+  let error: any = {};
+  if (email.trim().length === 0) {
+    error.message = 'email is required';
+  } else if (!email.match(EMAIL_REGEX)) {
+    error.message = 'email is invalid';
+  } else if (otp.trim().length === 0) {
+    error.message = 'password is required';
+  } else if (otp.trim().length !== 4) {
+    error.message = 'otp is invalid';
+  } else error = {};
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorResendOTP = (email: string) => {
+  let error: any = {};
+  if (email.trim().length === 0) {
+    error.message = 'email is required';
+  } else if (!email.match(EMAIL_REGEX)) {
+    error.message = 'email is invalid';
+  }
   return { error, isValid: Object.keys(error).length < 1 };
 };

@@ -1,12 +1,20 @@
 import BookModel from '@/models/book';
-import { checkAuth } from '@/middleware/auth';
-import { Books, QueryResolvers } from '@graphql/types/generated-graphql-types';
+import { checkAuth, checkVerified } from '@/middleware/auth';
+import { Books, ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
+import { makeGraphqlError } from '@utils/error';
 
 export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize }, context) => {
-  checkAuth(context);
+  const auth = checkAuth(context);
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
-  const response = await BookModel.find().limit(limit).skip(page).populate('user').exec();
+
+  const isVerified = await checkVerified(auth.userId);
+
+  if (!isVerified) {
+    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
+  }
+
+  const response = await BookModel.find().limit(limit).skip(page).populate('user').sort({ createdAt: 'desc' }).exec();
   const totalItem = await BookModel.count();
 
   const books: Books = {
