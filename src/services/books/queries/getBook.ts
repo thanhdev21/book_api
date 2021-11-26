@@ -4,7 +4,7 @@ import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-typ
 import { makeGraphqlError } from '@utils/error';
 
 export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => {
-  const auth = checkAuth(context);
+  const auth = await checkAuth(context);
 
   const isVerified = await checkVerified(auth.userId);
 

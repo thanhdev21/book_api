@@ -4,7 +4,8 @@ import { Books, ErrorCodes, QueryResolvers } from '@graphql/types/generated-grap
 import { makeGraphqlError } from '@utils/error';
 
 export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize }, context) => {
-  const auth = checkAuth(context);
+  const auth = await checkAuth(context);
+
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
 

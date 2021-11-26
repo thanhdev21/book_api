@@ -48,6 +48,7 @@ export const verifyToken = async (token: string): Promise<JWTClientAuthPayload> 
   return new Promise((resolve, reject) => {
     jwt.verify(token, jwtSecretKey, { algorithms: ['HS256'] }, (err: any, payload: any) => {
       if (err) return reject(err);
+      if (payload.type !== JWTAuthTokenType.ID_TOKEN) return reject(new Error('Token is invalid!'));
       resolve(payload);
     });
   });
@@ -57,6 +58,7 @@ export const verifyRefreshToken = async (refreshToken: string): Promise<JWTRefre
   return new Promise((resolve, reject) => {
     jwt.verify(refreshToken, jwtSecretKey, { algorithms: ['HS256'] }, (err: any, payload: any) => {
       if (err) return reject(err);
+      if (payload.type !== JWTAuthTokenType.REFRESH_TOKEN) return reject(new Error('Refresh token is invalid!'));
       resolve(payload);
     });
   });
@@ -81,7 +83,7 @@ export const signAuthToken = async (tokenData: { userId: mongoose.Schema.Types.O
     {
       userId: data.userId,
       type: JWTAuthTokenType.REFRESH_TOKEN,
-      tokenId: userToken.tokenId,
+      tokenId: userToken._id,
     },
     jwtSecretKey,
     {
