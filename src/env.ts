@@ -32,18 +32,10 @@ export interface ENV {
   email_smtp_password: string;
   root: string;
 
-  //   redisPort: number;
-  //   redisHost: string;
+  videoDir: string;
+  imageDir: string;
 
-  //   typeormEntitiesDir: string;
-  //   typeormMigrationsDir: string;
-  //   typeormMigrations: string;
-  //   typeormEntities: string;
-
-  //   videoDir: string;
-  //   imageDir: string;
-
-  //   videoScreenshotsDir: string;
+  videoScreenshotsDir: string;
   //   cdnImageDomain: string;
   //   cdnVideoDomain: string;
 }
@@ -58,6 +50,9 @@ const env: ENV = {
   email_smtp_password: process.env.EMAIL_SMTP_PASSWORD,
   email_smtp_port: process.env.EMAIL_SMTP_PORT,
   email_smtp_username: process.env.EMAIL_SMTP_USERNAME,
+  videoDir: process.env.VIDEO_DIR,
+  imageDir: process.env.IMAGE_DIR,
+  videoScreenshotsDir: process.env.VIDEO_SCREENSHOTS_DIR,
 };
 
 for (const e in env) {

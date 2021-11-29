@@ -1,9 +1,25 @@
 import UserModel from '@/models/user';
 import UserTokenModel from '@/models/userToken';
 import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import { GraphQLContext } from '@graphql/types/graphql';
 import { makeGraphqlError } from '@utils/error';
 import { verifyToken } from '@utils/jwt';
+import { AuthenticationError } from 'apollo-server-express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+
+export function requiredAuth<T>(next: T) {
+  return (obj: any, args: any, context: GraphQLContext, info: any) => {
+    if (!context.auth) throw new AuthenticationError('Unauthenticated!');
+    if (args.limit && (args.limit as number) > 100) {
+      args.limit = 100;
+    }
+    if (typeof args.limit !== undefined && (args.limit as number) < 0) {
+      args.limit = 10;
+    }
+    const nextFunc = next as any;
+    return nextFunc(obj, args, context, info);
+  };
+}
 
 export const checkAuth = async (context) => {
   const authHeader = context.req.headers.authorization;
