@@ -3,11 +3,13 @@ import { Resolvers, RoleCodes, MediaType, MediaStatus } from '@graphql/types/gen
 import { authMutations } from './auth/mutations';
 import { bookMutation } from './books/mutations';
 import { bookQueries } from './books/queries';
+import { mediaMutation } from './media/mutations';
 
 const resolvers: Resolvers = {
   Mutation: {
     ...authMutations,
     ...bookMutation,
+    ...mediaMutation,
   },
   Query: {
     ...bookQueries,

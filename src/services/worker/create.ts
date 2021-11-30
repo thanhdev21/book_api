@@ -6,6 +6,8 @@ export const createRedis = (extraConfig?: any) => {
   return new IORedis({
     port: env.redisPort,
     host: env.redisHost,
+    // maxRetriesPerRequest: null,
+    // enableReadyCheck: false,
     ...extraConfig,
   });
 };
@@ -48,7 +50,7 @@ export const createQueue = (name: string, queueOptions?: any): Queue.Queue => {
   });
 
   queue.on('failed', (job) => {
-    console.log(`Queue ${job.queue.name}-${job.id} is failed... `);
+    console.log(`Queue ${job.queue.name}-${job.id} \is failed... `);
   });
 
   queue.on('paused', () => {

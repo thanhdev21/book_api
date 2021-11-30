@@ -1,4 +1,4 @@
-import { HEAR_BEAT } from '@constants/creonTimes';
+import { HEAR_BEAT } from '@constants/cronTimes';
 import Queues, { RepeaterQueueNames } from '@services/worker/typed-queue';
 
 export const CronTimes = {

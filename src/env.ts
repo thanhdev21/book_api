@@ -35,6 +35,9 @@ export interface ENV {
   videoDir: string;
   imageDir: string;
 
+  redisPort: string;
+  redisHost: string;
+
   videoScreenshotsDir: string;
   //   cdnImageDomain: string;
   //   cdnVideoDomain: string;
@@ -53,6 +56,8 @@ const env: ENV = {
   videoDir: process.env.VIDEO_DIR,
   imageDir: process.env.IMAGE_DIR,
   videoScreenshotsDir: process.env.VIDEO_SCREENSHOTS_DIR,
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT,
 };
 
 for (const e in env) {

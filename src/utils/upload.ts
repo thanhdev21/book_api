@@ -1,7 +1,7 @@
 import StreamToBuffer from 'stream-to-buffer';
 import ImageMin from 'imagemin';
 import MozJpeg from 'imagemin-mozjpeg';
-const ffmpeg = require('fluent-ffmpeg');
+import ffmpeg from 'fluent-ffmpeg';
 
 export function arrayBufferToBufferCycle(ab: any) {
   let buffer = new Buffer(ab.length);
