@@ -8,8 +8,9 @@ import './alias-modules';
 import env from './env';
 import schemaWithResolvers from '@graphql/schema';
 import { ErrorCodes } from '@graphql/types/generated-graphql-types';
-import loaders from '@services/loader';
 import { makeGraphqlError } from '@utils/error';
+import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
+import bodyParser from 'body-parser';
 
 const PORT = env.port ? env.port : 32001;
 
@@ -20,9 +21,9 @@ const PORT = env.port ? env.port : 32001;
 
 const app = express();
 app.use(cors());
-app.use('/upload/', express.static('public'));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use('/storage', express.static(__dirname + '/storage'));
+app.use(graphqlUploadExpress());
+app.use(bodyParser.json());
 app.get('/', (_: express.Request, res: express.Response) => {
   return res.send('Hello book-shop Server!');
 });
@@ -56,7 +57,6 @@ const server = new ApolloServer({
   // },
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   introspection: true,
-  logger: null,
 });
 
 // apply app to apollo middleware

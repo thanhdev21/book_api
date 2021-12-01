@@ -1,74 +1,56 @@
-import { MutationResolvers, ErrorCodes, MediaType, MediaStatus, VideoPreset, Media } from '@graphql/types/generated-graphql-types';
-import { allowedPhotoType, allowedVideoType } from '@utils/helpers';
-import mkdirp from 'mkdirp';
-import { makeGraphqlError } from '@utils/error';
-import { createWriteStream, unlink } from 'fs';
-import { createMedia } from '@business/media';
-import Queues from '@services/worker/typed-queue';
-import { getVideoMeta, makeSlug } from '@utils/upload';
 import env from '@/env';
+import { checkAuth } from '@/middleware/auth';
+import { createMedia } from '@business/media';
+import { ErrorCodes, Media, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { makeGraphqlError } from '@utils/error';
+import { uploadFile } from '@utils/firestore';
+import { allowedPhotoType } from '@utils/helpers';
+// import Queues from '@services/worker/typed-queue';
+import { makeSlug } from '@utils/upload';
+import { createWriteStream, unlink } from 'fs';
+import mkdirp from 'mkdirp';
 
-export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { upload }, { auth }) => {
-  const { createReadStream, filename: _filename, mimetype } = await upload;
-
+export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file }, context) => {
+  const {
+    file: { createReadStream, filename: _filename, mimetype },
+  } = await file;
+  const auth = await checkAuth(context);
   const stream = createReadStream();
-  const { metaData } = auth;
 
-  let uploadType: 'VIDEO' | 'IMAGE' | null = null;
+  let uploadType: 'IMAGE' | null = null;
   let rootDir: string = null;
   if (allowedPhotoType(mimetype)) {
     uploadType = 'IMAGE';
     rootDir = env.imageDir;
-  } else if (allowedVideoType(mimetype)) {
-    uploadType = 'VIDEO';
-    rootDir = env.videoDir;
   }
 
   if (!uploadType) {
     throw makeGraphqlError('Not allowed mime type', ErrorCodes.BadUserInput);
   }
 
-  const folderDir = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}/${new Date().getTime()}`;
+  const folderDir = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
 
   const filename = makeSlug(_filename);
   await mkdirp(`${rootDir}/${folderDir}`);
   const mediaDir = `${rootDir}/${folderDir}/${filename}`;
+
+  const uri = await uploadFile(mediaDir, filename, 'image');
 
   const media: Media = await new Promise((resolve, reject) => {
     const writeStream = createWriteStream(mediaDir);
 
     writeStream.on('finish', async () => {
       let createData = {
-        createdBy: metaData.nameOfUser,
+        createdBy: auth.userId,
         path: `${folderDir}/${filename}`,
         fileName: filename,
         fileType: mimetype,
         type: MediaType.Photo,
         status: MediaStatus.Ready,
-        duration: undefined,
         size: undefined,
         title: filename,
       };
-
-      if (uploadType === 'VIDEO') {
-        const { duration, size } = await getVideoMeta(mediaDir);
-        createData.type = MediaType.Video;
-        createData.status = MediaStatus.Processing;
-        createData.duration = duration;
-        createData.size = size;
-      }
-
       const media = await createMedia(createData);
-      if (media.type === MediaType.Video) {
-        // take video screenshots
-        Queues.takeVideoScreenshots.add({ mediaId: media.id, videoDir: mediaDir, folderDir, filename });
-
-        // handle video resolutions
-        [VideoPreset.Video1080P, VideoPreset.Video720P, VideoPreset.Video480P, VideoPreset.Video360P].forEach((value, index) => {
-          const preset = Number(value);
-          Queues.handleVideoResolutions.add({ filename, folderDir, mediaId: media.id, videoPath: mediaDir, preset });
-        });
-      }
 
       resolve(media);
     });

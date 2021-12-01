@@ -2,7 +2,7 @@ import UserModel from '@/models/user';
 import { IAuth } from '@/types';
 
 import { RoleCodes } from '@constants/enum';
-import { User } from './generated-graphql-types';
+import { Media, User } from './generated-graphql-types';
 
 export interface GraphQLContext {
   auth: GraphqlContextAuth;
@@ -20,6 +20,7 @@ export interface GraphqlContextAuth extends IAuth {
 
 export interface ContextLoaders {
   users: Loader<User>;
+  photos: Loader<Media>;
 }
 
 export interface Loader<T> {

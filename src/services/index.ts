@@ -1,4 +1,5 @@
 import { Resolvers, RoleCodes, MediaType, MediaStatus } from '@graphql/types/generated-graphql-types';
+import { GraphQLUpload } from 'graphql-upload';
 
 import { authMutations } from './auth/mutations';
 import { bookMutation } from './books/mutations';
@@ -14,7 +15,6 @@ const resolvers: Resolvers = {
   Query: {
     ...bookQueries,
   },
-
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,
     CLIENT: RoleCodes.CLIENT,

@@ -6,8 +6,8 @@ export const createRedis = (extraConfig?: any) => {
   return new IORedis({
     port: env.redisPort,
     host: env.redisHost,
-    // maxRetriesPerRequest: null,
-    // enableReadyCheck: false,
+    maxRetriesPerRequest: null,
+    enableReadyCheck: false,
     ...extraConfig,
   });
 };
