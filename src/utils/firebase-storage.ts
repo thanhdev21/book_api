@@ -1,4 +1,4 @@
-import * as firebase from 'firebase-admin';
+import  firebase from 'firebase-admin';
 import serviceAccount from '../book-backend-traning-firebase-cert.json';
 
 const params = {
@@ -14,9 +14,6 @@ const params = {
   clientC509CertUrl: serviceAccount.client_x509_cert_url,
 };
 
-firebase.initializeApp({
-  credential: firebase.credential.cert(params),
-});
 const admin = firebase.initializeApp({
   credential: firebase.credential.cert(params),
 });
@@ -27,7 +24,7 @@ export const uploadFile = async (path, filename, folder) => {
   // Upload the File
   const storage = await storageRef.upload(path, {
     public: true,
-    destination: `/${folder}/${filename}`,
+    destination: `${folder}/${filename}`,
     metadata: {},
   });
 

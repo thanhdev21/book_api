@@ -3,7 +3,7 @@ import { checkAuth } from '@/middleware/auth';
 import { createMedia } from '@business/media';
 import { ErrorCodes, Media, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import { uploadFile } from '@utils/firestore';
+import { uploadFile } from '@utils/firebase-storage';
 import { allowedPhotoType } from '@utils/helpers';
 // import Queues from '@services/worker/typed-queue';
 import { makeSlug } from '@utils/upload';
@@ -36,6 +36,7 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
 
   const uri = await uploadFile(mediaDir, filename, 'image');
 
+
   const media: Media = await new Promise((resolve, reject) => {
     const writeStream = createWriteStream(mediaDir);
 
@@ -49,6 +50,7 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
         status: MediaStatus.Ready,
         size: undefined,
         title: filename,
+        originUrl: uri
       };
       const media = await createMedia(createData);
 
