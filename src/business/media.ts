@@ -1,9 +1,8 @@
-import { dateNow } from '@utils/date';
 import { MediaType, MediaFilterInput, MediaStatus } from '@graphql/types/generated-graphql-types';
 import { MediaModel } from '@/models/media';
 
 export const createMedia = async (input: { path: string; createdBy: string; fileName: string; fileType: string; type: MediaType; status?: MediaStatus; duration?: number; size?: number; title?: string }) => {
-  const media = new MediaModel({ ...input, createdAt: dateNow(), updatedAt: dateNow() });
+  const media = new MediaModel({ ...input });
   return media.save();
 };
 

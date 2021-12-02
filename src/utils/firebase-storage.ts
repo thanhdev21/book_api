@@ -1,4 +1,4 @@
-import  firebase from 'firebase-admin';
+import firebase from 'firebase-admin';
 import serviceAccount from '../book-backend-traning-firebase-cert.json';
 
 const params = {
@@ -20,13 +20,37 @@ const admin = firebase.initializeApp({
 
 const storageRef = admin.storage().bucket(`gs://book-backend-traning.appspot.com/`);
 
-export const uploadFile = async (path, filename, folder) => {
+export const uploadFile = async (buffer, filename, folder) => {
   // Upload the File
-  const storage = await storageRef.upload(path, {
-    public: true,
-    destination: `${folder}/${filename}`,
-    metadata: {},
-  });
 
-  return storage[0].metadata.mediaLink;
+  const file = storageRef.file(`${folder}/${filename}`);
+  return file
+    .save(buffer)
+    .then((stuff) => {
+      return file.getSignedUrl({
+        action: 'read',
+        expires: '12-31-3000',
+      });
+    })
+    .then((urls) => {
+      const url = urls[0];
+      console.log(`Image url = ${url}`);
+      return url;
+    })
+    .catch((err) => {
+      console.log(`Unable to upload image ${err}`);
+    });
+};
+
+export const genFirebaseStorageFolderName = (name) => {
+  switch (name) {
+    case 'IMAGE':
+      return 'image';
+    case 'VIDEO':
+      return 'video';
+    case 'PDF':
+      return 'pdf';
+    default:
+      return 'image';
+  }
 };

@@ -1,14 +1,12 @@
 import env from '@/env';
 import { checkAuth } from '@/middleware/auth';
 import { createMedia } from '@business/media';
-import { ErrorCodes, Media, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import { uploadFile } from '@utils/firebase-storage';
-import { allowedPhotoType } from '@utils/helpers';
+import { genFirebaseStorageFolderName, uploadFile } from '@utils/firebase-storage';
+import { allowedPdfType, allowedPhotoType, allowedVideoType } from '@utils/helpers';
 // import Queues from '@services/worker/typed-queue';
-import { makeSlug } from '@utils/upload';
-import { createWriteStream, unlink } from 'fs';
-import mkdirp from 'mkdirp';
+import { makeSlug, streamToBuffer } from '@utils/upload';
 
 export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file }, context) => {
   const {
@@ -17,11 +15,14 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
   const auth = await checkAuth(context);
   const stream = createReadStream();
 
-  let uploadType: 'IMAGE' | null = null;
-  let rootDir: string = null;
+  let uploadType: 'VIDEO' | 'IMAGE' | 'PDF' | null = null;
+
   if (allowedPhotoType(mimetype)) {
     uploadType = 'IMAGE';
-    rootDir = env.imageDir;
+  } else if (allowedVideoType(mimetype)) {
+    uploadType = 'VIDEO';
+  } else if (allowedPdfType(mimetype)) {
+    uploadType = 'PDF';
   }
 
   if (!uploadType) {
@@ -31,41 +32,23 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
   const folderDir = `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`;
 
   const filename = makeSlug(_filename);
-  await mkdirp(`${rootDir}/${folderDir}`);
-  const mediaDir = `${rootDir}/${folderDir}/${filename}`;
 
-  const uri = await uploadFile(mediaDir, filename, 'image');
+  const buffer = await streamToBuffer(stream);
 
+  const uri = await uploadFile(buffer, filename, genFirebaseStorageFolderName(uploadType));
 
-  const media: Media = await new Promise((resolve, reject) => {
-    const writeStream = createWriteStream(mediaDir);
-
-    writeStream.on('finish', async () => {
-      let createData = {
-        createdBy: auth.userId,
-        path: `${folderDir}/${filename}`,
-        fileName: filename,
-        fileType: mimetype,
-        type: MediaType.Photo,
-        status: MediaStatus.Ready,
-        size: undefined,
-        title: filename,
-        originUrl: uri
-      };
-      const media = await createMedia(createData);
-
-      resolve(media);
-    });
-
-    writeStream.on('error', (error) => {
-      unlink(`${mediaDir}`, () => {
-        reject(error);
-      });
-    });
-
-    stream.on('error', (error) => writeStream.destroy(error));
-    stream.pipe(writeStream);
-  });
+  let createData = {
+    createdBy: auth.userId,
+    path: `${folderDir}/${filename}`,
+    fileName: filename,
+    fileType: mimetype,
+    type: MediaType.Photo,
+    status: MediaStatus.Ready,
+    size: undefined,
+    title: filename,
+    originUrl: uri,
+  };
+  const media = await createMedia(createData);
 
   return media;
 };

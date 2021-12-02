@@ -19,6 +19,10 @@ export const allowedPhotoType = (mimetype: string) => {
   return ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml', 'image/x-dwg', 'image/vnd.dwg'].indexOf(mimetype.toLowerCase()) !== -1;
 };
 
+export const allowedPdfType = (mimetype: string) => {
+  return ['application/pdf'].indexOf(mimetype.toLowerCase()) !== -1;
+};
+
 export const encodedID = (value: string) => {
   return base64.encode(utf8.encode(value));
 };
