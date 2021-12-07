@@ -31,7 +31,6 @@ app.get('/', (_: express.Request, res: express.Response) => {
 /**
  * create graphql server
  */
-console.log('tesst');
 
 const server = new ApolloServer({
   context: ({ req }) => ({ req }),
