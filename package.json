@@ -11,7 +11,7 @@
     "gen:types": "graphql-codegen",
     "dev": "nodemon ./src/index.ts",
     "build": "npm run gen:types && rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js"
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [],
   "author": "thanhdev.crelife@gmail.com",
