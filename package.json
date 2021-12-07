@@ -10,9 +10,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "graphql-codegen",
-    "dev": "nodemon ./src/index.ts",
+    "start": "nodemon ./src/index.ts",
     "build": "rimraf dist && tsc",
-    "start": "npm run gen:types && npm run build && node dist/src/index.js",
+    "deploy": "npm run gen:types && npm run build && node dist/src/index.js",
     "nodemon": "SET NODE_ENV=development && nodemon",
     "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
@@ -27,6 +27,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/bull": "^3.15.6",
+    "@types/graphql": "^14.5.0",
     "@types/graphql-upload": "^8.0.7",
     "@types/imagemin": "^8.0.0",
     "@types/imagemin-mozjpeg": "^8.0.1",
