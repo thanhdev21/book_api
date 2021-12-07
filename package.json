@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "graphql-codegen",
-    "dev": "nodemon ./src/index.ts",
+    "start": "nodemon ./src/index.ts",
     "build": "rimraf dist && tsc",
     "deploy": "npm run gen:types && npm run build && node dist/src/index.js",
     "nodemon": "SET NODE_ENV=development && nodemon",
