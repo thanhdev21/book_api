@@ -82,7 +82,7 @@ const run = async () => {
 if (process.env.NODE_ENV !== 'test') {
   run()
     .then(() => {
-      console.log(`🍼  🚀  GraphQL server listen at: http://localhost:${PORT}/graphql`);
+      console.log(`🍼  🚀  GraphQL server listen at: http://localhost:${PORT || 32001}/graphql`);
     })
     .catch((err) => {
       console.log(err);
