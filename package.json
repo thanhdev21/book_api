@@ -9,13 +9,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "graphql-codegen",
-    "start": "nodemon src/index.ts",
+    "dev": "nodemon src/index.ts",
     "build": "rimraf dist && tsc --project tsconfig.json",
-    "deploy": " yarn build && yarn wait-on && yarn gen:types &&  node dist/src/index",
-    "typings": "dist/src/index",
-    "nodemon": "SET NODE_ENV=development && nodemon",
-    "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema",
-    "wait-on": "wait-on dist/src/index.js -d 2000"
+    "start": "yarn build && node dist/src/index.js",
+    "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
   "keywords": [],
   "author": "thanhdev.crelife@gmail.com",
