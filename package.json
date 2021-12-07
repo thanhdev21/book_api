@@ -11,7 +11,7 @@
     "gen:types": "graphql-codegen",
     "start": "nodemon src/index.ts",
     "build": "rimraf dist && tsc",
-    "deploy": "yarn gen:types && yarn wait-on && yarn build && node dist/src/index",
+    "deploy": " yarn build && yarn gen:types && yarn wait-on && node dist/src/index",
     "typings": "dist/src/index",
     "nodemon": "SET NODE_ENV=development && nodemon",
     "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema",
