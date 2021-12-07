@@ -10,8 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "graphql-codegen",
     "dev": "nodemon src/index.ts",
-    "build": "rimraf dist && tsc --project tsconfig.json",
-    "start": "npm run build && npm run gen:types && node dist/src/index.js",
+    "build": "rimraf dist && tsc --project tsconfig.json && npm run gen:types",
+    "start": "node dist/src/index.js",
     "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
   "keywords": [],
