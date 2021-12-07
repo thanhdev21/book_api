@@ -1,5 +1,6 @@
 import UserModel from '@/models/user';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { dateNow } from '@utils/date';
 import { makeGraphqlError } from '@utils/error';
 import { randomNumber } from '@utils/helpers';
 import mailer, { MAILER_CONFIG_ACCOUNT } from '@utils/mailer';
@@ -25,6 +26,7 @@ export const resendOtp: MutationResolvers['resendOtp'] = async (_, { email }) =>
         try {
           user.isConfirmed = false;
           user.confirmOTP = otp.toString();
+          user.otpExpireAt = dateNow() + 1800;
           user.save();
           return true;
         } catch (error) {

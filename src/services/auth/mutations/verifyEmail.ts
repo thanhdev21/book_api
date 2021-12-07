@@ -1,5 +1,6 @@
 import UserModel from '@/models/user';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { dateNow } from '@utils/date';
 import { makeGraphqlError } from '@utils/error';
 import { validatorVerifyEmail } from '@utils/validators';
 
@@ -18,16 +19,20 @@ export const verifyEmail: MutationResolvers['verifyEmail'] = async (_, { input }
   }
 
   if (!user.isConfirmed) {
-    if (user.confirmOTP === otp) {
-      return UserModel.findOneAndUpdate({ email }, { isConfirmed: true, confirmOTP: null })
-        .then(() => {
-          return true;
-        })
-        .catch((e) => {
-          throw makeGraphqlError(e, ErrorCodes.InternalServerError);
-        });
+    if (dateNow() < user.otpExpireAt) {
+      if (user.confirmOTP === otp) {
+        return UserModel.findOneAndUpdate({ email }, { isConfirmed: true, confirmOTP: null })
+          .then(() => {
+            return true;
+          })
+          .catch((e) => {
+            throw makeGraphqlError(e, ErrorCodes.InternalServerError);
+          });
+      } else {
+        throw makeGraphqlError('Otp does not match', ErrorCodes.BadUserInput);
+      }
     } else {
-      throw makeGraphqlError('Otp does not match', ErrorCodes.BadUserInput);
+      throw makeGraphqlError('Otp has been expired, resend otp and try again', ErrorCodes.OtpExpire);
     }
   } else {
     throw makeGraphqlError('Account already confirmed', ErrorCodes.Forbidden);

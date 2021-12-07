@@ -25,6 +25,7 @@ export const createUser = async (input: { firstName: string; lastName: string; p
     email: input.email,
     password: hashPassword(input.password),
     confirmOTP: otp,
+    otpExpireAt: dateNow() + 1800,
   });
 
   return userRepo.save();

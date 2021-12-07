@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_SMTP_PASSWORD,
   },
 });
-const mailTemplate = (otp) => '<p>Please Confirm your Account.</p><p>OTP: ' + otp + '</p>';
+const mailTemplate = (otp) => '<p>We’re excited you’ve joined our system. <br/> As soon as you verify your email to confirm this is you, we can get started. </p><p></p> <p> OTP: ' + otp + ' </p> <p>OTP will expire in 30 minutes.</p>';
 
 const send = (from: string, to: string, subject: string, html: any) => {
   // send mail with defined transport object

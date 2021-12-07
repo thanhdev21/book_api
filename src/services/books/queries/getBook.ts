@@ -12,7 +12,7 @@ export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => 
     throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
-  const book = await BookModel.findById(id).populate('user').exec();
+  const book = await BookModel.findById(id).populate('uploadedBy').exec();
 
   if (!book) {
     throw makeGraphqlError('Book not found', ErrorCodes.BadUserInput);

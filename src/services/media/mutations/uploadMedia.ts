@@ -5,7 +5,6 @@ import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/
 import { makeGraphqlError } from '@utils/error';
 import { genFirebaseStorageFolderName, uploadFile } from '@utils/firebase-storage';
 import { allowedPdfType, allowedPhotoType, allowedVideoType } from '@utils/helpers';
-// import Queues from '@services/worker/typed-queue';
 import { makeSlug, streamToBuffer } from '@utils/upload';
 
 export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file }, context) => {
@@ -37,7 +36,7 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
 
   const uri = await uploadFile(buffer, filename, genFirebaseStorageFolderName(uploadType));
 
-  let createData = {
+  const createData = {
     createdBy: auth.userId,
     path: `${folderDir}/${filename}`,
     fileName: filename,
@@ -48,6 +47,7 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
     title: filename,
     originUrl: uri,
   };
+
   const media = await createMedia(createData);
 
   return media;

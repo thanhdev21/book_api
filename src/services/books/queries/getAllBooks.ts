@@ -15,7 +15,7 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
     throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
-  const response = await BookModel.find().limit(limit).skip(page).populate('user').sort({ createdAt: 'desc' }).exec();
+  const response = await BookModel.find().limit(limit).skip(page).populate(['uploadedBy', 'coverPhoto']).sort({ createdAt: 'desc' }).exec();
   const totalItem = await BookModel.count();
 
   const books: Books = {

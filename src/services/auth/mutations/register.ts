@@ -1,5 +1,6 @@
 import UserModel from '@/models/user';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { dateNow } from '@utils/date';
 import { makeGraphqlError } from '@utils/error';
 import { randomNumber } from '@utils/helpers';
 import mailer, { MAILER_CONFIG_ACCOUNT } from '@utils/mailer';
@@ -28,21 +29,9 @@ export const register: MutationResolvers['register'] = async (_, { registerInput
     lastName,
     password: hashPassword,
     confirmOTP: otp,
+    otpExpireAt: dateNow() + 1800,
   });
-
-  return mailer
-    .send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp))
-    .then(() => {
-      try {
-        newUser.save();
-        return true;
-      } catch (error) {
-        console.log('err', error);
-        return false;
-      }
-    })
-    .catch((err) => {
-      console.log('err', err);
-      return false;
-    });
+  await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+  await newUser.save();
+  return true;
 };

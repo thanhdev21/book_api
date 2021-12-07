@@ -9,6 +9,7 @@ interface User {
   confirmOTP?: string;
   otpTries?: boolean;
   status: boolean;
+  otpExpireAt: number;
   // _id: mongoose.Schema.Types.ObjectId;
 }
 
@@ -23,6 +24,7 @@ const UserSchema = new mongoose.Schema<User>(
     confirmOTP: { type: String, required: false, nullable: true },
     otpTries: { type: Boolean, required: false, default: false },
     status: { type: Boolean, required: true, default: true },
+    otpExpireAt: { type: Number, required: true },
   },
   { timestamps: true },
 );
@@ -31,5 +33,6 @@ const UserSchema = new mongoose.Schema<User>(
 UserSchema.virtual('fullName').get(function (this: User) {
   return this.firstName + ' ' + this.lastName;
 });
+UserSchema.index({ email: 1 });
 const UserModel = mongoose.model('users', UserSchema);
 export default UserModel;
