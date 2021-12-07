@@ -11,7 +11,7 @@
     "gen:types": "graphql-codegen",
     "dev": "nodemon src/index.ts",
     "build": "rimraf dist && tsc --project tsconfig.json",
-    "start": "yarn build && yarn gen:types && node dist/src/index.js",
+    "start": "npm run build && npm run gen:types && node dist/src/index.js",
     "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
   "keywords": [],
