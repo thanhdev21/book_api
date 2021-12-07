@@ -35,6 +35,6 @@
     "noImplicitReturns": true,
     "noUnusedLocals": false
   },
-  "include": ["src"],
+  "include": ["src","test.ts"],
   "exclude": ["dist", "src/__test__/"]
 }

@@ -12,9 +12,9 @@
     "gen:types": "graphql-codegen",
     "dev": "nodemon ./src/index.ts",
     "build": "rimraf dist && tsc --project tsconfig.json",
-    "start": "npm run build && node ./dist/index.js",
+    "start": "npm run build && node dist/src/index.js",
     "nodemon": "SET NODE_ENV=development && nodemon",
-    "postbuild": "cpy src/graphql/schema/*.graphql dist/graphql/schema"
+    "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
   "keywords": [],
   "author": "thanhdev.crelife@gmail.com",
