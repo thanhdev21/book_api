@@ -12,7 +12,7 @@
     "gen:types": "graphql-codegen",
     "dev": "nodemon ./src/index.ts",
     "build": "rimraf dist && tsc",
-    "start": "npm run gen:types && npm run build && node dist/src/index.js",
+    "deploy": "npm run gen:types && npm run build && node dist/src/index.js",
     "nodemon": "SET NODE_ENV=development && nodemon",
     "postbuild": "cpy src/graphql/schema/*.graphql dist/src/graphql/schema"
   },
