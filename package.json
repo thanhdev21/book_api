@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "graphql-codegen",
-    "start": "nodemon ./src/index.ts",
-    "build": "tsc"
+    "dev": "nodemon ./src/index.ts",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js"
   },
   "keywords": [],
   "author": "thanhdev.crelife@gmail.com",
@@ -25,6 +26,7 @@
     "@types/imagemin-mozjpeg": "^8.0.1",
     "@types/ioredis": "^4.28.1",
     "@types/mkdirp": "^1.0.2",
+    "rimraf": "^3.0.2",
     "typescript": "^4.4.4"
   },
   "dependencies": {
