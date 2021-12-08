@@ -19,6 +19,8 @@ type User {
   confirmOTP: String
   otpTries: Boolean
   status: UserStatus!
+  otpExpireAt: Int
+  role: Int!
 }
 type Users {
   items: [User!]!

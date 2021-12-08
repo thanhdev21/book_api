@@ -302,8 +302,10 @@ export type User = {
   firstName: Scalars['String'];
   isConfirmed: Scalars['Boolean'];
   lastName: Scalars['String'];
+  otpExpireAt?: Maybe<Scalars['Int']>;
   otpTries?: Maybe<Scalars['Boolean']>;
   password: Scalars['String'];
+  role: Scalars['Int'];
   status: UserStatus;
 };
 
@@ -599,8 +601,10 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isConfirmed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  otpExpireAt?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   otpTries?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['UserStatus'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

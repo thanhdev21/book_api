@@ -1,21 +1,7 @@
-import { UserStatus } from '@graphql/types/generated-graphql-types';
+import { User, UserStatus } from '@graphql/types/generated-graphql-types';
 import mongoose from 'mongoose';
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  isConfirmed: boolean;
-  confirmOTP?: string;
-  otpTries?: boolean;
-  status: string;
-  otpExpireAt: number;
-  role: number;
-  // _id: mongoose.Schema.Types.ObjectId;
-}
-
-const UserSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema<User>(
   {
     // _id: { type: mongoose.Schema.Types.ObjectId, required: false },
     firstName: { type: String, required: true },
