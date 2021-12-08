@@ -21,7 +21,7 @@ yarn.lock
 
 dist 
 
-src/graphql/types/generated-graphql-types.ts
+# src/graphql/types/generated-graphql-types.ts
 
 storage
 
