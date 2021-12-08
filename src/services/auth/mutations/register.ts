@@ -1,5 +1,5 @@
 import UserModel from '@/models/user';
-import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { ErrorCodes, MutationResolvers, RoleCodes } from '@graphql/types/generated-graphql-types';
 import { dateNow } from '@utils/date';
 import { makeGraphqlError } from '@utils/error';
 import { randomNumber } from '@utils/helpers';
@@ -7,9 +7,9 @@ import mailer, { MAILER_CONFIG_ACCOUNT } from '@utils/mailer';
 import { validatorRegister } from '@utils/validators';
 import bcrypt from 'bcrypt';
 
-export const register: MutationResolvers['register'] = async (_, { registerInput }) => {
-  const { email, password, firstName, lastName } = registerInput;
-  const { isValid, error } = validatorRegister(registerInput);
+export const register: MutationResolvers['register'] = async (_, { input }) => {
+  const { email, password, firstName, lastName } = input;
+  const { isValid, error } = validatorRegister(input);
   const otp = randomNumber(4);
 
   if (!isValid) {
@@ -30,6 +30,7 @@ export const register: MutationResolvers['register'] = async (_, { registerInput
     password: hashPassword,
     confirmOTP: otp,
     otpExpireAt: dateNow() + 1800,
+    role: RoleCodes.USER,
   });
   await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
   await newUser.save();

@@ -4,8 +4,8 @@
 type Mutation {
   # adminLogin(data: AdminLoginInput!): JWT!
 
-  login(data: MutationLoginInput!): JWT!
-  verifyClient(data: VerifyClientInput!): ClientJWT!
+  login(input: MutationLoginInput!): JWT!
+  adminLogin(input: MutationLoginInput!): JWT!
 
   logout(refreshToken: String!): Boolean!
   refreshToken(refreshToken: String!): JWT!
@@ -17,7 +17,7 @@ type Mutation {
 
   resendOtp(email: String!): Boolean!
 
-  register(registerInput: RegisterInput!): Boolean!
+  register(input: RegisterInput!): Boolean!
 
   # changePassword(data: ChangePasswordInput!): Boolean! @auth
 }

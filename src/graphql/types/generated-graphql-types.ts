@@ -130,6 +130,7 @@ export type Medias = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  adminLogin: Jwt;
   createBook: Book;
   forgotPassword: Scalars['Boolean'];
   login: Jwt;
@@ -139,9 +140,14 @@ export type Mutation = {
   resendOtp: Scalars['Boolean'];
   resetPassword: Scalars['Boolean'];
   updateMedia: Media;
+  updateUserStatus: User;
   uploadMedia: Media;
-  verifyClient: ClientJwt;
   verifyEmail: Scalars['Boolean'];
+};
+
+
+export type MutationAdminLoginArgs = {
+  input: MutationLoginInput;
 };
 
 
@@ -156,7 +162,7 @@ export type MutationForgotPasswordArgs = {
 
 
 export type MutationLoginArgs = {
-  data: MutationLoginInput;
+  input: MutationLoginInput;
 };
 
 
@@ -171,7 +177,7 @@ export type MutationRefreshTokenArgs = {
 
 
 export type MutationRegisterArgs = {
-  registerInput: RegisterInput;
+  input: RegisterInput;
 };
 
 
@@ -191,13 +197,13 @@ export type MutationUpdateMediaArgs = {
 };
 
 
-export type MutationUploadMediaArgs = {
-  file: Scalars['Upload'];
+export type MutationUpdateUserStatusArgs = {
+  input: UpdateUserStatusInput;
 };
 
 
-export type MutationVerifyClientArgs = {
-  data: VerifyClientInput;
+export type MutationUploadMediaArgs = {
+  file: Scalars['Upload'];
 };
 
 
@@ -227,8 +233,10 @@ export type Query = {
   __typename?: 'Query';
   getAllBooks: Books;
   getAllMedia: Medias;
+  getAllUsers: Users;
   getBook: Book;
   getMedia: Media;
+  getUser: User;
   me?: Maybe<User>;
 };
 
@@ -246,12 +254,23 @@ export type QueryGetAllMediaArgs = {
 };
 
 
+export type QueryGetAllUsersArgs = {
+  pageIndex?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryGetBookArgs = {
   id: Scalars['ID'];
 };
 
 
 export type QueryGetMediaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetUserArgs = {
   id: Scalars['ID'];
 };
 
@@ -270,6 +289,11 @@ export type UpdateMediaInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserStatusInput = {
+  id: Scalars['ID'];
+  status: UserStatus;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
@@ -280,7 +304,18 @@ export type User = {
   lastName: Scalars['String'];
   otpTries?: Maybe<Scalars['Boolean']>;
   password: Scalars['String'];
-  status: Scalars['Boolean'];
+  status: UserStatus;
+};
+
+export enum UserStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}
+
+export type Users = {
+  __typename?: 'Users';
+  items: Array<User>;
+  paginate?: Maybe<Paginate>;
 };
 
 export type VerifyClientInput = {
@@ -390,8 +425,11 @@ export type ResolversTypes = {
   RoleCodes: RoleCodes;
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateMediaInput: UpdateMediaInput;
+  UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
+  UserStatus: UserStatus;
+  Users: ResolverTypeWrapper<Users>;
   VerifyClientInput: VerifyClientInput;
   VerifyEmailInput: VerifyEmailInput;
 };
@@ -420,8 +458,10 @@ export type ResolversParentTypes = {
   RegisterInput: RegisterInput;
   String: Scalars['String'];
   UpdateMediaInput: UpdateMediaInput;
+  UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: Scalars['Upload'];
   User: User;
+  Users: Users;
   VerifyClientInput: VerifyClientInput;
   VerifyEmailInput: VerifyEmailInput;
 };
@@ -513,17 +553,18 @@ export interface MockupScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 }
 
 export type MutationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  adminLogin?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationAdminLoginArgs, 'input'>>;
   createBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'input'>>;
   forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
-  login?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'data'>>;
+  login?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLogoutArgs, 'refreshToken'>>;
   refreshToken?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationRefreshTokenArgs, 'refreshToken'>>;
-  register?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'registerInput'>>;
+  register?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
   resendOtp?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResendOtpArgs, 'email'>>;
   resetPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password' | 'token'>>;
   updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data'>>;
+  updateUserStatus?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserStatusArgs, 'input'>>;
   uploadMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUploadMediaArgs, 'file'>>;
-  verifyClient?: Resolver<ResolversTypes['ClientJWT'], ParentType, ContextType, RequireFields<MutationVerifyClientArgs, 'data'>>;
   verifyEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationVerifyEmailArgs, 'input'>>;
 };
 
@@ -538,12 +579,14 @@ export type PaginateResolvers<ContextType = GraphQLContext, ParentType extends R
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllBooks?: Resolver<ResolversTypes['Books'], ParentType, ContextType, RequireFields<QueryGetAllBooksArgs, 'pageIndex' | 'pageSize'>>;
   getAllMedia?: Resolver<ResolversTypes['Medias'], ParentType, ContextType, RequireFields<QueryGetAllMediaArgs, 'pageIndex' | 'pageSize'>>;
+  getAllUsers?: Resolver<ResolversTypes['Users'], ParentType, ContextType, RequireFields<QueryGetAllUsersArgs, 'pageIndex' | 'pageSize'>>;
   getBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<QueryGetBookArgs, 'id'>>;
   getMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<QueryGetMediaArgs, 'id'>>;
+  getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
-export type RoleCodesResolvers = EnumResolverSignature<{ ADMIN?: any, CLIENT?: any, USER?: any }, ResolversTypes['RoleCodes']>;
+export type RoleCodesResolvers = EnumResolverSignature<{ ADMIN?: any, CONTENT_CREATOR?: any, USER?: any }, ResolversTypes['RoleCodes']>;
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload';
@@ -558,7 +601,13 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   otpTries?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['UserStatus'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UsersResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Users'] = ResolversParentTypes['Users']> = {
+  items?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  paginate?: Resolver<Maybe<ResolversTypes['Paginate']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -579,6 +628,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   RoleCodes?: RoleCodesResolvers;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  Users?: UsersResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = GraphQLContext> = {

@@ -1,6 +1,6 @@
 import UserModel from '@/models/user';
 import UserTokenModel from '@/models/userToken';
-import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import { ErrorCodes, RoleCodes } from '@graphql/types/generated-graphql-types';
 import { GraphQLContext } from '@graphql/types/graphql';
 import { makeGraphqlError } from '@utils/error';
 import { verifyToken } from '@utils/jwt';
@@ -45,5 +45,11 @@ export const checkAuth = async (context) => {
 export const checkVerified = async (userId) => {
   const user = await UserModel.findById(userId);
   if (user.isConfirmed) return true;
+  return false;
+};
+
+export const checkIsAdmin = async (userId) => {
+  const user = await UserModel.findById(userId);
+  if (user.role === RoleCodes.ADMIN) return true;
   return false;
 };

@@ -1,5 +1,14 @@
 # import * from "./base.graphql"
 
+type Mutation {
+  updateUserStatus(input: UpdateUserStatusInput!): User!
+}
+
+type Query {
+  getAllUsers(pageIndex: Int = 1, pageSize: Int = 20): Users!
+  getUser(id: ID!): User!
+}
+
 type User {
   _id: ID!
   firstName: String!
@@ -9,5 +18,14 @@ type User {
   isConfirmed: Boolean!
   confirmOTP: String
   otpTries: Boolean
-  status: Boolean!
+  status: UserStatus!
+}
+type Users {
+  items: [User!]!
+  paginate: Paginate
+}
+
+input UpdateUserStatusInput {
+  id: ID!
+  status: UserStatus!
 }

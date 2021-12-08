@@ -19,7 +19,7 @@ enum Order {
 enum RoleCodes {
   ADMIN
   USER
-  CLIENT
+  CONTENT_CREATOR
 }
 
 enum ErrorCodes {
@@ -43,4 +43,9 @@ enum MediaStatus {
   FAILED
   PROCESSING
   READY
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
 }

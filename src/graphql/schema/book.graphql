@@ -3,12 +3,12 @@
 # import * from "./media.graphql"
 
 type Mutation {
-  createBook(input: CreateBookInput!): Book! @auth(requires: [CLIENT])
+  createBook(input: CreateBookInput!): Book!
 }
 
 type Query {
-  getAllBooks(pageIndex: Int = 1, pageSize: Int = 20): Books! @auth(requires: [CLIENT])
-  getBook(id: ID!): Book! @auth(requires: [CLIENT])
+  getAllBooks(pageIndex: Int = 1, pageSize: Int = 20): Books!
+  getBook(id: ID!): Book!
 }
 
 type Book {

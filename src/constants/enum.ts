@@ -6,7 +6,7 @@ export enum UserTokenType {
 export enum RoleCodes {
   ADMIN = 1,
   USER = 2,
-  CLIENT = 3,
+  CONTENT_CREATOR = 3,
 }
 
 export enum MediaType {
@@ -27,4 +27,9 @@ export enum VideoPreset {
   Video480P = 2,
   Video720P = 3,
   Video1080P = 4,
+}
+
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }

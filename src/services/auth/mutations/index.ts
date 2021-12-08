@@ -1,4 +1,5 @@
 import { MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { adminLogin } from './adminLogin';
 import { login } from './login';
 import { logout } from './logout';
 import { refreshToken } from './refreshToken';
@@ -13,4 +14,5 @@ export const authMutations: MutationResolvers = {
   resendOtp,
   refreshToken,
   logout,
+  adminLogin,
 };

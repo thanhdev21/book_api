@@ -1,3 +1,4 @@
+import { UserStatus } from '@graphql/types/generated-graphql-types';
 import mongoose from 'mongoose';
 
 interface User {
@@ -8,12 +9,13 @@ interface User {
   isConfirmed: boolean;
   confirmOTP?: string;
   otpTries?: boolean;
-  status: boolean;
+  status: string;
   otpExpireAt: number;
+  role: number;
   // _id: mongoose.Schema.Types.ObjectId;
 }
 
-const UserSchema = new mongoose.Schema<User>(
+const UserSchema = new mongoose.Schema(
   {
     // _id: { type: mongoose.Schema.Types.ObjectId, required: false },
     firstName: { type: String, required: true },
@@ -23,8 +25,9 @@ const UserSchema = new mongoose.Schema<User>(
     isConfirmed: { type: Boolean, required: true, default: false },
     confirmOTP: { type: String, required: false, nullable: true },
     otpTries: { type: Boolean, required: false, default: false },
-    status: { type: Boolean, required: true, default: true },
+    status: { type: String, required: true, default: UserStatus.Active },
     otpExpireAt: { type: Number, required: true },
+    role: { type: Number, required: true },
   },
   { timestamps: true },
 );

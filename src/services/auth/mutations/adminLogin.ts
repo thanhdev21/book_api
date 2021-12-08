@@ -5,7 +5,7 @@ import { buildJWTResponse } from '@utils/jwt';
 import { validatorLogin } from '@utils/validators';
 import bcrypt from 'bcrypt';
 
-export const login: MutationResolvers['login'] = async (_, { input }) => {
+export const adminLogin: MutationResolvers['adminLogin'] = async (_, { input }) => {
   const { email, password } = input;
   const { isValid, error } = validatorLogin(input);
   const user = await UserModel.findOne({ email });
@@ -18,7 +18,7 @@ export const login: MutationResolvers['login'] = async (_, { input }) => {
     throw makeGraphqlError('User does not already exist!', ErrorCodes.GraphqlValidationFailed);
   }
 
-  if (user.role !== RoleCodes.USER) {
+  if (user.role === RoleCodes.USER) {
     throw makeGraphqlError('User does not already exist!', ErrorCodes.GraphqlValidationFailed);
   }
 
