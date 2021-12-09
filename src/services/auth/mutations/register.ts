@@ -18,21 +18,28 @@ export const register: MutationResolvers['register'] = async (_, { input }) => {
 
   const user = await UserModel.findOne({ email });
 
-  if (user) {
+  if (user && user.isConfirmed) {
     throw makeGraphqlError('User already exist!', ErrorCodes.BadUserInput);
-  }
-  const hashPassword = await bcrypt.hash(password, 12);
+  } else {
+    if (!user) {
+      const hashPassword = await bcrypt.hash(password, 12);
 
-  const newUser = new UserModel({
-    email,
-    firstName,
-    lastName,
-    password: hashPassword,
-    confirmOTP: otp,
-    otpExpireAt: dateNow() + 1800,
-    role: RoleCodes.USER,
-  });
-  await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
-  await newUser.save();
-  return true;
+      const newUser = new UserModel({
+        email,
+        firstName,
+        lastName,
+        password: hashPassword,
+        confirmOTP: otp,
+        otpExpireAt: dateNow() + 1800,
+        role: RoleCodes.USER,
+      });
+      await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+      await newUser.save();
+      return true;
+    } else {
+      await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+      await UserModel.findByIdAndUpdate(user._id, { confirmOTP: otp.toString(), otpExpireAt: dateNow() + 1800 });
+      return true;
+    }
+  }
 };

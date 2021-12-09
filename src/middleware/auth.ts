@@ -53,3 +53,9 @@ export const checkIsAdmin = async (userId) => {
   if (user.role === RoleCodes.ADMIN) return true;
   return false;
 };
+
+export const checkPermissionAdminAndContentCreator = async (userId) => {
+  const user = await UserModel.findById(userId);
+  if (user.role === RoleCodes.USER) return false;
+  return true;
+};

@@ -1,6 +1,7 @@
 # import * from "./base.graphql"
 # import * from "./user.graphql"
 # import * from "./media.graphql"
+# import * from "./category.graphql"
 
 type Mutation {
   createBook(input: CreateBookInput!): Book!
@@ -20,6 +21,8 @@ type Book {
   createdAt: Date
   updatedAt: Date
   coverPhoto: Media!
+  author: String!
+  category: [Category!]!
 }
 
 type Books {
@@ -33,4 +36,5 @@ input CreateBookInput {
   isbn: String!
   coverPhoto: ID
   author: String!
+  category: [ID!]!
 }

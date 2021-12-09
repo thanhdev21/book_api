@@ -14,6 +14,6 @@ const ClientSchema = new mongoose.Schema<ClientSchema>(
   },
   { timestamps: true },
 );
-const ClientModel = mongoose.model('client', ClientSchema);
+const ClientModel = mongoose.models.client || mongoose.model('client', ClientSchema);
 
 export default ClientModel;

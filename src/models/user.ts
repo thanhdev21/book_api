@@ -23,5 +23,5 @@ UserSchema.virtual('fullName').get(function (this: User) {
   return this.firstName + ' ' + this.lastName;
 });
 UserSchema.index({ email: 1 });
-const UserModel = mongoose.model('users', UserSchema);
+const UserModel = mongoose.models.users || mongoose.model('users', UserSchema);
 export default UserModel;

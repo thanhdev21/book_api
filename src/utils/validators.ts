@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateBookInput, MutationLoginInput, RegisterInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { CreateBookInput, CreateCategoryInput, MutationLoginInput, RegisterInput, UpdateCategoryInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 
 export const validatorRegister = (input: RegisterInput) => {
   const { email, password, firstName, lastName } = input;
@@ -82,5 +82,39 @@ export const validatorResendOTP = (email: string) => {
   } else if (!email.match(EMAIL_REGEX)) {
     error.message = 'email is invalid';
   }
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorCreateCategory = (input: CreateCategoryInput) => {
+  const { description, name } = input;
+
+  let error: any = {};
+  if (name.trim().length === 0) {
+    error.message = 'name is required';
+  } else if (name.trim().length > 100) {
+    error.message = ' Max 100 alphanumeric characters';
+  } else if (description.trim().length === 0) {
+    error.message = 'description is required';
+  } else if (description.trim().length > 255) {
+    error.message = 'Max 255 alphanumeric character';
+  } else error = {};
+
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorUpdateCategory = (input: UpdateCategoryInput) => {
+  const { description, name } = input;
+
+  let error: any = {};
+  if (name.trim().length === 0) {
+    error.message = 'name is required';
+  } else if (name.trim().length > 100) {
+    error.message = ' Max 100 alphanumeric characters';
+  } else if (description.trim().length === 0) {
+    error.message = 'description is required';
+  } else if (description.trim().length > 255) {
+    error.message = 'Max 255 alphanumeric character';
+  } else error = {};
+
   return { error, isValid: Object.keys(error).length < 1 };
 };

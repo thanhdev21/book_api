@@ -3,3 +3,4 @@
 # import *, Query.*, Mutation.*, Subscription.* from "./user.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./book.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./media.graphql"
+# import *, Query.*, Mutation.*, Subscription.* from "./category.graphql"
