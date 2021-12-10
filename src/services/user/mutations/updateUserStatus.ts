@@ -13,7 +13,11 @@ export const updateUserStatus: MutationResolvers['updateUserStatus'] = async (_,
     throw makeGraphqlError('Only admin can update user status', ErrorCodes.Forbidden);
   }
 
-  const user = await UserModel.findByIdAndUpdate(input.id, { $set: { status: input.status } });
+  const user = await UserModel.findById(input.id);
+
+  user.status = input.status;
+
+  await user.save();
 
   return user;
 };

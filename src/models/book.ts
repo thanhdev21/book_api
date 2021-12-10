@@ -1,7 +1,11 @@
 import { Book } from '@graphql/types/generated-graphql-types';
 import mongoose from 'mongoose';
 
-const BookSchema = new mongoose.Schema<Book>(
+interface IBook extends mongoose.Document, Book {
+  _id: string;
+}
+
+const BookSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -13,6 +17,6 @@ const BookSchema = new mongoose.Schema<Book>(
   },
   { timestamps: true },
 );
-const BookModel = mongoose.models.books || mongoose.model('books', BookSchema);
+const BookModel = mongoose.models['books'] || mongoose.model<IBook>('books', BookSchema, 'books');
 
 export default BookModel;

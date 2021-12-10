@@ -1,7 +1,11 @@
 import { User, UserStatus } from '@graphql/types/generated-graphql-types';
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema<User>(
+interface IUser extends mongoose.Document, User {
+  _id: string;
+}
+
+const UserSchema = new mongoose.Schema(
   {
     // _id: { type: mongoose.Schema.Types.ObjectId, required: false },
     firstName: { type: String, required: true },
@@ -22,5 +26,6 @@ UserSchema.virtual('fullName').get(function (this: User) {
   return this.firstName + ' ' + this.lastName;
 });
 UserSchema.index({ email: 1 });
-const UserModel = mongoose.models.users || mongoose.model('users', UserSchema);
+
+const UserModel = mongoose.models['users'] || mongoose.model<IUser>('users', UserSchema, 'users');
 export default UserModel;

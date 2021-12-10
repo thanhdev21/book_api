@@ -5,7 +5,7 @@ import { UserTokenType } from '@constants/enum';
 import UserTokenModel from '@/models/userToken';
 import { dateNow } from '@utils/date';
 import { v4 } from 'uuid';
-import ClientModel from '@/models/client';
+
 import mongoose from 'mongoose';
 
 export const genUserToken = async (parentId: mongoose.Schema.Types.ObjectId, userTokenType: UserTokenType, expiresInSeconds: number = 600) => {
@@ -29,10 +29,4 @@ export const createUser = async (input: { firstName: string; lastName: string; p
   });
 
   return userRepo.save();
-};
-
-export const getClient = async (condition: { clientId: string; secretKey: string }) => {
-  const { clientId, secretKey } = condition;
-
-  return ClientModel.findOne({ clientId: clientId, secretKey: secretKey });
 };
