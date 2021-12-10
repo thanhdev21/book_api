@@ -26,7 +26,9 @@ export const updateCategory: MutationResolvers['updateCategory'] = async (_, { i
     throw makeGraphqlError('Category does not exist!', ErrorCodes.BadUserInput);
   }
 
-  category.update({ name, description });
+  category.name = name;
+  category.description = description;
+  await category.save;
 
   return category;
 };

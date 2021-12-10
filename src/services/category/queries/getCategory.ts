@@ -1,5 +1,5 @@
 import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
-import CategoryModel from '@/models/Category';
+import CategoryModel from '@/models/category';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
