@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema<User>(
     password: { type: String, required: true },
     isConfirmed: { type: Boolean, required: true, default: false },
     confirmOTP: { type: String, required: false, nullable: true },
-    otpTries: { type: Boolean, required: false, default: false },
     status: { type: String, required: true, default: UserStatus.Active },
     otpExpireAt: { type: Number, required: true },
     role: { type: Number, required: true },

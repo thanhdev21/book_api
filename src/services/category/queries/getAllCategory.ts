@@ -4,7 +4,7 @@ import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-typ
 import { makeGraphqlError } from '@utils/error';
 import CategoryModel from '@/models/category';
 
-export const getAllCategories: QueryResolvers['getAllCategories'] = async (_, {}, context) => {
+export const getAllCategories: QueryResolvers['getAllCategories'] = async (_, __, context) => {
   const auth = await checkAuth(context);
 
   const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);

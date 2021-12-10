@@ -38,7 +38,9 @@ export const register: MutationResolvers['register'] = async (_, { input }) => {
       return true;
     } else {
       await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
-      await UserModel.findByIdAndUpdate(user._id, { confirmOTP: otp.toString(), otpExpireAt: dateNow() + 1800 });
+      user.confirmOTP = otp.toString();
+      user.otpExpireAt = dateNow() + 1800;
+      await user.save();
       return true;
     }
   }
