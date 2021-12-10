@@ -21,13 +21,10 @@ export const verifyEmail: MutationResolvers['verifyEmail'] = async (_, { input }
   if (!user.isConfirmed) {
     if (dateNow() < user.otpExpireAt) {
       if (user.confirmOTP === otp) {
-        return UserModel.findOneAndUpdate({ email }, { isConfirmed: true, confirmOTP: null })
-          .then(() => {
-            return true;
-          })
-          .catch((e) => {
-            throw makeGraphqlError(e, ErrorCodes.InternalServerError);
-          });
+        user.isConfirmed = true;
+        user.confirmOTP = null;
+        await user.save();
+        return true;
       } else {
         throw makeGraphqlError('Otp does not match', ErrorCodes.BadUserInput);
       }
