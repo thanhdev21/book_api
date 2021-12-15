@@ -55,3 +55,12 @@ input BookFilter {
   categories: [String]
   uploadedBy: String
 }
+
+input UpdateBookInput {
+  title: String!
+  description: String!
+  isbn: String!
+  coverPhoto: ID
+  author: String!
+  category: [ID!]!
+}

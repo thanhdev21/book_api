@@ -15,6 +15,14 @@ import { GraphQLContext } from '@graphql/types/graphql';
 
 const PORT = env.port ? env.port : 32001;
 
+const buildGraphqlContext = (auth: GraphQLContext['auth'], ipAddress, socketId: string = null) => {
+  return {
+    auth,
+    makeMongoId: mongoose.Types.ObjectId,
+    socketId,
+  };
+};
+
 /**
  *
  * @param auth need to build graphql context
@@ -34,7 +42,11 @@ app.get('/', (_: express.Request, res: express.Response) => {
  */
 
 const server = new ApolloServer({
-  context: ({ req }) => ({ req }),
+  context: ({ req, connection }: { req: express.Request & { auth?: any }; connection: any }) => {
+    console.log(req?.headers, '===========================', connection);
+    if (connection) return connection.context;
+    return buildGraphqlContext(req?.auth, (req?.headers && req?.headers['x-real-ip']) || req.connection.remoteAddress);
+  },
   formatError: (err) => {
     if (err && err.extensions && err.extensions.exception.code === 'ValidationError') {
       return makeGraphqlError(err.message, ErrorCodes.GraphqlValidationFailed);

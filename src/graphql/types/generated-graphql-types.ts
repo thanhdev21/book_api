@@ -165,7 +165,11 @@ export type Mutation = {
   changePassword: Scalars['Boolean'];
   createBook: Book;
   createCategory: Category;
+<<<<<<< HEAD
   deleteBook?: Maybe<Scalars['Boolean']>;
+=======
+  deleteBooks?: Maybe<Scalars['Boolean']>;
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   forgotPassword: Scalars['Boolean'];
   login: Jwt;
   logout: Scalars['Boolean'];
@@ -202,8 +206,13 @@ export type MutationCreateCategoryArgs = {
 };
 
 
+<<<<<<< HEAD
 export type MutationDeleteBookArgs = {
   id: Scalars['String'];
+=======
+export type MutationDeleteBooksArgs = {
+  input: CreateBookInput;
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
 };
 
 
@@ -244,7 +253,10 @@ export type MutationResetPasswordArgs = {
 
 
 export type MutationUpdateBookArgs = {
+<<<<<<< HEAD
   id: Scalars['String'];
+=======
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   input: UpdateBookInput;
 };
 
@@ -262,7 +274,11 @@ export type MutationUpdateMediaArgs = {
 
 
 export type MutationUpdateUserStatusArgs = {
+<<<<<<< HEAD
   id: Scalars['String'];
+=======
+  id: Scalars['ID'];
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   input: UpdateUserStatusInput;
 };
 
@@ -361,7 +377,11 @@ export { RoleCodes };
 
 export type UpdateBookInput = {
   author: Scalars['String'];
+<<<<<<< HEAD
   categories: Array<Scalars['ID']>;
+=======
+  category: Array<Scalars['ID']>;
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
@@ -680,7 +700,11 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   changePassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'data'>>;
   createBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'input'>>;
   createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
+<<<<<<< HEAD
   deleteBook?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteBookArgs, 'id'>>;
+=======
+  deleteBooks?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteBooksArgs, 'input'>>;
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
   login?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLogoutArgs, 'refreshToken'>>;
@@ -688,9 +712,15 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   register?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
   resendOtp?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResendOtpArgs, 'email'>>;
   resetPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password' | 'token'>>;
+<<<<<<< HEAD
   updateBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'id' | 'input'>>;
   updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'id' | 'input'>>;
   updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data' | 'id'>>;
+=======
+  updateBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'input'>>;
+  updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'input'>>;
+  updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data'>>;
+>>>>>>> f744fc8 (fix bug cannot get objectId from variable)
   updateUserStatus?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserStatusArgs, 'id' | 'input'>>;
   uploadMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUploadMediaArgs, 'file'>>;
   verifyEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationVerifyEmailArgs, 'input'>>;
