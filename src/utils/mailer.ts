@@ -11,6 +11,8 @@ const transporter = nodemailer.createTransport({
 });
 const mailTemplate = (otp) => '<p>We’re excited you’ve joined our system. <br/> As soon as you verify your email to confirm this is you, we can get started. </p><p></p> <p> OTP: ' + otp + ' </p> <p>OTP will expire in 30 minutes.</p>';
 
+const mailTemplateResetPassword = (token) => '<p>To change your password, click on the following link:</p><p></p> <a>' + token + ' </a> <p>Please be aware that you may change the password only once using this link.</p> <p>Link will expire in 30 minutes.</p>';
+
 const send = (from: string, to: string, subject: string, html: any) => {
   // send mail with defined transport object
   // visit https://nodemailer.com/ for more options
@@ -33,4 +35,4 @@ export const MAILER_CONFIG_ACCOUNT = {
   },
 };
 
-export default { send, mailTemplate, MAILER_CONFIG_ACCOUNT };
+export default { send, mailTemplate, MAILER_CONFIG_ACCOUNT, mailTemplateResetPassword };

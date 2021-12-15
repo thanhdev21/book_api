@@ -15,8 +15,10 @@ const UserSchema = new mongoose.Schema(
     isConfirmed: { type: Boolean, required: true, default: false },
     confirmOTP: { type: String, required: false, nullable: true },
     status: { type: String, required: true, default: UserStatus.Active },
-    otpExpireAt: { type: Number, required: true },
+    otpExpireAt: { type: Number, required: false, nullable: true },
     role: { type: Number, required: true },
+    resetPasswordToken: { type: String, required: false, nullable: true },
+    resetPasswordTokenExpiredAt: { type: Number, required: false, nullable: true },
   },
   { timestamps: true },
 );

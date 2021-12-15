@@ -56,6 +56,11 @@ export type Category = {
   updatedAt?: Maybe<Scalars['Date']>;
 };
 
+export type ChangePasswordInput = {
+  newPassword: Scalars['String'];
+  oldPassword: Scalars['String'];
+};
+
 export type ClientJwt = {
   __typename?: 'ClientJWT';
   expiresAt: Scalars['Int'];
@@ -91,6 +96,7 @@ export enum ErrorCodes {
   GraphqlValidationFailed = 'GRAPHQL_VALIDATION_FAILED',
   InternalServerError = 'INTERNAL_SERVER_ERROR',
   OtpExpire = 'OTP_EXPIRE',
+  TokenExpire = 'TOKEN_EXPIRE',
   Unauthenticated = 'UNAUTHENTICATED'
 }
 
@@ -148,6 +154,7 @@ export type Medias = {
 export type Mutation = {
   __typename?: 'Mutation';
   adminLogin: Jwt;
+  changePassword: Scalars['Boolean'];
   createBook: Book;
   createCategory: Category;
   forgotPassword: Scalars['Boolean'];
@@ -167,6 +174,11 @@ export type Mutation = {
 
 export type MutationAdminLoginArgs = {
   input: MutationLoginInput;
+};
+
+
+export type MutationChangePasswordArgs = {
+  data: ChangePasswordInput;
 };
 
 
@@ -345,7 +357,6 @@ export type User = {
   isConfirmed: Scalars['Boolean'];
   lastName: Scalars['String'];
   otpExpireAt?: Maybe<Scalars['Int']>;
-  password?: Maybe<Scalars['String']>;
   role: Scalars['Int'];
   status: UserStatus;
 };
@@ -446,6 +457,7 @@ export type ResolversTypes = {
   Books: ResolverTypeWrapper<Books>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
+  ChangePasswordInput: ChangePasswordInput;
   ClientJWT: ResolverTypeWrapper<ClientJwt>;
   ClientPayload: ResolverTypeWrapper<ClientPayload>;
   CreateBookInput: CreateBookInput;
@@ -487,6 +499,7 @@ export type ResolversParentTypes = {
   Books: Books;
   Boolean: Scalars['Boolean'];
   Category: Category;
+  ChangePasswordInput: ChangePasswordInput;
   ClientJWT: ClientJwt;
   ClientPayload: ClientPayload;
   CreateBookInput: CreateBookInput;
@@ -614,6 +627,7 @@ export interface MockupScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 
 export type MutationResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   adminLogin?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationAdminLoginArgs, 'input'>>;
+  changePassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'data'>>;
   createBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'input'>>;
   createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
   forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
@@ -664,7 +678,6 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
   isConfirmed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   otpExpireAt?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   role?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['UserStatus'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

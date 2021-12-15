@@ -3,8 +3,6 @@ import UserTokenModel from '@/models/userToken';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { buildJWTResponse, JWTRefreshTokenPayload, verifyRefreshToken } from '@utils/jwt';
-import { validatorLogin } from '@utils/validators';
-import bcrypt from 'bcrypt';
 
 export const refreshToken: MutationResolvers['refreshToken'] = async (_, { refreshToken }) => {
   const f5TokenVerified: JWTRefreshTokenPayload = await verifyRefreshToken(refreshToken);

@@ -19,7 +19,7 @@ type Mutation {
 
   register(input: RegisterInput!): Boolean!
 
-  # changePassword(data: ChangePasswordInput!): Boolean! @auth
+  changePassword(data: ChangePasswordInput!): Boolean!
 }
 
 type Query {
@@ -67,4 +67,9 @@ input RegisterInput {
 input VerifyEmailInput {
   email: String!
   otp: String!
+}
+
+input ChangePasswordInput {
+  oldPassword: String!
+  newPassword: String!
 }

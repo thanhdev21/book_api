@@ -64,6 +64,16 @@ export const verifyRefreshToken = async (refreshToken: string): Promise<JWTRefre
   });
 };
 
+export const verifyResetPasswordToken = async (token: string): Promise<Omit<JWTRefreshTokenPayload, 'tokenId'>> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecretKey, { algorithms: ['HS256'] }, (err: any, payload: any) => {
+      if (err) return reject(err);
+      if (payload.type !== JWTAuthTokenType.RESET_PASSWORD) return reject(new Error('Refresh token is invalid!'));
+      resolve(payload);
+    });
+  });
+};
+
 export const signAuthToken = async (tokenData: { userId: mongoose.Schema.Types.ObjectId }) => {
   const userToken = await genUserToken(tokenData.userId, UserTokenType.REFRESH_TOKEN);
 

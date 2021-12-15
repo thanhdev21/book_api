@@ -20,24 +20,12 @@ export const resendOtp: MutationResolvers['resendOtp'] = async (_, { email }) =>
   }
 
   if (!user.isConfirmed) {
-    return mailer
-      .send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp))
-      .then(() => {
-        try {
-          user.isConfirmed = false;
-          user.confirmOTP = otp.toString();
-          user.otpExpireAt = dateNow() + 1800;
-          user.save();
-          return true;
-        } catch (error) {
-          console.log('err', error);
-          return false;
-        }
-      })
-      .catch((err) => {
-        console.log('err', err);
-        return false;
-      });
+    mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+    user.isConfirmed = false;
+    user.confirmOTP = otp.toString();
+    user.otpExpireAt = dateNow() + 1800;
+    await user.save();
+    return true;
   } else {
     throw makeGraphqlError('Account already confirmed', ErrorCodes.Forbidden);
   }

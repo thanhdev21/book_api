@@ -33,11 +33,11 @@ export const register: MutationResolvers['register'] = async (_, { input }) => {
         otpExpireAt: dateNow() + 1800,
         role: RoleCodes.USER,
       });
-      await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+      mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
       await newUser.save();
       return true;
     } else {
-      await mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
+      mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'Please confirm your account', mailer.mailTemplate(otp));
       user.confirmOTP = otp.toString();
       user.otpExpireAt = dateNow() + 1800;
       await user.save();
