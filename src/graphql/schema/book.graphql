@@ -62,5 +62,10 @@ input UpdateBookInput {
   isbn: String!
   coverPhoto: ID
   author: String!
-  category: [ID!]!
+  categories: [ID!]!
+}
+
+input BookFilter {
+  categories: [String]
+  uploadedBy: String
 }
