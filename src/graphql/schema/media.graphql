@@ -3,12 +3,12 @@
 
 type Mutation {
   uploadMedia(file: Upload!): Media!
-  updateMedia(data: UpdateMediaInput!): Media!
+  updateMedia(id: String!, data: UpdateMediaInput!): Media!
 }
 
 type Query {
   getAllMedia(pageSize: Int = 20, pageIndex: Int = 1, filter: MediaFilterInput): Medias!
-  getMedia(id: ID!): Media!
+  getMedia(id: String!): Media!
 }
 
 type Medias {
@@ -35,6 +35,7 @@ type Media {
 
   createdAt: Date!
   updatedAt: Date
+  deletedAt: Date
 }
 
 type BaseMedia {
@@ -51,5 +52,4 @@ input MediaFilterInput {
 input UpdateMediaInput {
   title: String
   description: String
-  id: ID!
 }

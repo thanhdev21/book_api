@@ -11,6 +11,7 @@ import { ErrorCodes } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
 import bodyParser from 'body-parser';
+import { GraphQLContext } from '@graphql/types/graphql';
 
 const PORT = env.port ? env.port : 32001;
 

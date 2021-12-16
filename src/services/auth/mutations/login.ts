@@ -6,6 +6,7 @@ import { validatorLogin } from '@utils/validators';
 import bcrypt from 'bcrypt';
 
 export const login: MutationResolvers['login'] = async (_, { input }) => {
+  console.log('input');
   const { email, password } = input;
   const { isValid, error } = validatorLogin(input);
   const user = await UserModel.findOne({ email });

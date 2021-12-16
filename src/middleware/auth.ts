@@ -21,8 +21,9 @@ export function requiredAuth<T>(next: T) {
   };
 }
 
-export const checkAuth = async (context) => {
-  const authHeader = context.req.headers.authorization;
+export const checkAuth = async (auth) => {
+  console.log('auth', auth.req.headers?.authorization, auth.header);
+  const authHeader = auth.req.headers?.authorization;
 
   if (authHeader) {
     // Bearer ....

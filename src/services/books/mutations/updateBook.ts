@@ -28,7 +28,7 @@ export const updateCategory: MutationResolvers['updateCategory'] = async (_, { i
 
   category.name = name;
   category.description = description;
-  await category.save();
+  await category.save;
 
   return category;
 };

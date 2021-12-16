@@ -31,14 +31,20 @@ export type Book = {
   __typename?: 'Book';
   _id: Scalars['ID'];
   author: Scalars['String'];
-  category: Array<Category>;
+  categories: Array<Category>;
   coverPhoto: Media;
   createdAt?: Maybe<Scalars['Date']>;
+  deletedAt?: Maybe<Scalars['Date']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
   uploadedBy: User;
+};
+
+export type BookFilter = {
+  categories?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  uploadedBy?: InputMaybe<Scalars['String']>;
 };
 
 export type Books = {
@@ -50,7 +56,8 @@ export type Books = {
 export type Category = {
   __typename?: 'Category';
   _id: Scalars['ID'];
-  createdAt?: Maybe<Scalars['Date']>;
+  createdAt: Scalars['Date'];
+  deletedAt?: Maybe<Scalars['Date']>;
   description: Scalars['String'];
   name: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
@@ -77,7 +84,7 @@ export type ClientPayload = {
 
 export type CreateBookInput = {
   author: Scalars['String'];
-  category: Array<Scalars['ID']>;
+  categories: Array<Scalars['ID']>;
   coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
@@ -113,8 +120,9 @@ export type Jwt = {
 export type Media = {
   __typename?: 'Media';
   _id: Scalars['ID'];
-  createdAt: Scalars['Int'];
+  createdAt: Scalars['Date'];
   createdBy: User;
+  deletedAt?: Maybe<Scalars['Date']>;
   description?: Maybe<Scalars['String']>;
   fileName: Scalars['String'];
   fileType?: Maybe<Scalars['String']>;
@@ -124,7 +132,7 @@ export type Media = {
   status: MediaStatus;
   title?: Maybe<Scalars['String']>;
   type: MediaType;
-  updatedAt?: Maybe<Scalars['Int']>;
+  updatedAt?: Maybe<Scalars['Date']>;
 };
 
 export type MediaFilterInput = {
@@ -157,6 +165,7 @@ export type Mutation = {
   changePassword: Scalars['Boolean'];
   createBook: Book;
   createCategory: Category;
+  deleteBook?: Maybe<Scalars['Boolean']>;
   forgotPassword: Scalars['Boolean'];
   login: Jwt;
   logout: Scalars['Boolean'];
@@ -164,6 +173,7 @@ export type Mutation = {
   register: Scalars['Boolean'];
   resendOtp: Scalars['Boolean'];
   resetPassword: Scalars['Boolean'];
+  updateBook: Book;
   updateCategory: Category;
   updateMedia: Media;
   updateUserStatus: User;
@@ -189,6 +199,11 @@ export type MutationCreateBookArgs = {
 
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryInput;
+};
+
+
+export type MutationDeleteBookArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -228,17 +243,26 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationUpdateBookArgs = {
+  id: Scalars['String'];
+  input: UpdateBookInput;
+};
+
+
 export type MutationUpdateCategoryArgs = {
+  id: Scalars['String'];
   input: UpdateCategoryInput;
 };
 
 
 export type MutationUpdateMediaArgs = {
   data: UpdateMediaInput;
+  id: Scalars['String'];
 };
 
 
 export type MutationUpdateUserStatusArgs = {
+  id: Scalars['String'];
   input: UpdateUserStatusInput;
 };
 
@@ -285,8 +309,10 @@ export type Query = {
 
 
 export type QueryGetAllBooksArgs = {
+  filter?: InputMaybe<BookFilter>;
   pageIndex?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -298,28 +324,30 @@ export type QueryGetAllMediaArgs = {
 
 
 export type QueryGetAllUsersArgs = {
+  filter?: InputMaybe<UserFilter>;
   pageIndex?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
 };
 
 
 export type QueryGetBookArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QueryGetCategoryArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QueryGetMediaArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
 export type QueryGetUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -331,20 +359,26 @@ export type RegisterInput = {
 
 export { RoleCodes };
 
+export type UpdateBookInput = {
+  author: Scalars['String'];
+  categories: Array<Scalars['ID']>;
+  coverPhoto?: InputMaybe<Scalars['ID']>;
+  description: Scalars['String'];
+  isbn: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type UpdateCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
   name: Scalars['String'];
 };
 
 export type UpdateMediaInput = {
   description?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
   title?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateUserStatusInput = {
-  id: Scalars['ID'];
   status: UserStatus;
 };
 
@@ -352,6 +386,8 @@ export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
   confirmOTP?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  deletedAt?: Maybe<Scalars['Date']>;
   email: Scalars['String'];
   firstName: Scalars['String'];
   isConfirmed: Scalars['Boolean'];
@@ -359,6 +395,11 @@ export type User = {
   otpExpireAt?: Maybe<Scalars['Int']>;
   role: Scalars['Int'];
   status: UserStatus;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
+
+export type UserFilter = {
+  status?: InputMaybe<UserStatus>;
 };
 
 export enum UserStatus {
@@ -454,6 +495,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   BaseMedia: ResolverTypeWrapper<BaseMedia>;
   Book: ResolverTypeWrapper<Book>;
+  BookFilter: BookFilter;
   Books: ResolverTypeWrapper<Books>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
@@ -481,11 +523,13 @@ export type ResolversTypes = {
   RegisterInput: RegisterInput;
   RoleCodes: RoleCodes;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateBookInput: UpdateBookInput;
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateMediaInput: UpdateMediaInput;
   UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
+  UserFilter: UserFilter;
   UserStatus: UserStatus;
   Users: ResolverTypeWrapper<Users>;
   VerifyClientInput: VerifyClientInput;
@@ -496,6 +540,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   BaseMedia: BaseMedia;
   Book: Book;
+  BookFilter: BookFilter;
   Books: Books;
   Boolean: Scalars['Boolean'];
   Category: Category;
@@ -518,11 +563,13 @@ export type ResolversParentTypes = {
   Query: {};
   RegisterInput: RegisterInput;
   String: Scalars['String'];
+  UpdateBookInput: UpdateBookInput;
   UpdateCategoryInput: UpdateCategoryInput;
   UpdateMediaInput: UpdateMediaInput;
   UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: Scalars['Upload'];
   User: User;
+  UserFilter: UserFilter;
   Users: Users;
   VerifyClientInput: VerifyClientInput;
   VerifyEmailInput: VerifyEmailInput;
@@ -544,9 +591,10 @@ export type BaseMediaResolvers<ContextType = GraphQLContext, ParentType extends 
 export type BookResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  category?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   coverPhoto?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -563,7 +611,8 @@ export type BooksResolvers<ContextType = GraphQLContext, ParentType extends Reso
 
 export type CategoryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
@@ -600,8 +649,9 @@ export type JwtResolvers<ContextType = GraphQLContext, ParentType extends Resolv
 
 export type MediaResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   createdBy?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   fileName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   fileType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -611,7 +661,7 @@ export type MediaResolvers<ContextType = GraphQLContext, ParentType extends Reso
   status?: Resolver<ResolversTypes['MediaStatus'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['MediaType'], ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -630,6 +680,7 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   changePassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'data'>>;
   createBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'input'>>;
   createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
+  deleteBook?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteBookArgs, 'id'>>;
   forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
   login?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLogoutArgs, 'refreshToken'>>;
@@ -637,9 +688,10 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   register?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'input'>>;
   resendOtp?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResendOtpArgs, 'email'>>;
   resetPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password' | 'token'>>;
-  updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'input'>>;
-  updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data'>>;
-  updateUserStatus?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserStatusArgs, 'input'>>;
+  updateBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'id' | 'input'>>;
+  updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'id' | 'input'>>;
+  updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data' | 'id'>>;
+  updateUserStatus?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserStatusArgs, 'id' | 'input'>>;
   uploadMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUploadMediaArgs, 'file'>>;
   verifyEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationVerifyEmailArgs, 'input'>>;
 };
@@ -673,6 +725,8 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 export type UserResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   confirmOTP?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isConfirmed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -680,6 +734,7 @@ export type UserResolvers<ContextType = GraphQLContext, ParentType extends Resol
   otpExpireAt?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   role?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['UserStatus'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

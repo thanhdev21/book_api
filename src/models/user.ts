@@ -19,8 +19,12 @@ const UserSchema = new mongoose.Schema(
     role: { type: Number, required: true },
     resetPasswordToken: { type: String, required: false, nullable: true },
     resetPasswordTokenExpiredAt: { type: Number, required: false, nullable: true },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
-  { timestamps: true },
+  { timestamps: true, strict: false },
 );
 
 // Virtual for user's full name

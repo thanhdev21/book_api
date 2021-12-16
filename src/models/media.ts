@@ -1,7 +1,7 @@
 import { Media, MediaStatus } from '@graphql/types/generated-graphql-types';
 import mongoose from 'mongoose';
 interface IMedia extends mongoose.Document, Media {
-  _id: string;
+  _id: mongoose.Schema.Types.ObjectId;
 }
 
 const MediaSchema = new mongoose.Schema(
@@ -16,6 +16,10 @@ const MediaSchema = new mongoose.Schema(
     status: { type: String, required: false, default: MediaStatus.Processing },
     path: { type: String, required: false },
     originUrl: { type: String, required: false },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );

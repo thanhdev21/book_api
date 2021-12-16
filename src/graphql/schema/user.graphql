@@ -1,12 +1,12 @@
 # import * from "./base.graphql"
 
 type Mutation {
-  updateUserStatus(input: UpdateUserStatusInput!): User!
+  updateUserStatus(id: String!, input: UpdateUserStatusInput!): User!
 }
 
 type Query {
-  getAllUsers(pageIndex: Int = 1, pageSize: Int = 20): Users!
-  getUser(id: ID!): User!
+  getAllUsers(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: UserFilter): Users!
+  getUser(id: String!): User!
 }
 
 type User {
@@ -19,6 +19,9 @@ type User {
   status: UserStatus!
   otpExpireAt: Int
   role: Int!
+  deletedAt: Date
+  createdAt: Date
+  updatedAt: Date
 }
 type Users {
   items: [User!]!
@@ -26,6 +29,9 @@ type Users {
 }
 
 input UpdateUserStatusInput {
-  id: ID!
   status: UserStatus!
+}
+
+input UserFilter {
+  status: UserStatus
 }

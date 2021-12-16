@@ -4,20 +4,21 @@
 
 type Mutation {
   createCategory(input: CreateCategoryInput!): Category!
-  updateCategory(input: UpdateCategoryInput!): Category!
+  updateCategory(id: String!, input: UpdateCategoryInput!): Category!
 }
 
 type Query {
   getAllCategories: [Category!]!
-  getCategory(id: ID!): Category!
+  getCategory(id: String!): Category!
 }
 
 type Category {
   _id: ID!
   name: String!
   description: String!
-  createdAt: Date
+  createdAt: Date!
   updatedAt: Date
+  deletedAt: Date
 }
 
 input CreateCategoryInput {
@@ -28,5 +29,4 @@ input CreateCategoryInput {
 input UpdateCategoryInput {
   name: String!
   description: String
-  id: ID!
 }

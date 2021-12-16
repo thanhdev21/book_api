@@ -3,7 +3,7 @@ import { checkAuth, checkVerified } from '@/middleware/auth';
 import { Books, ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize }, context) => {
+export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize, search, filter }, context) => {
   const auth = await checkAuth(context);
 
   const limit = pageSize;
@@ -15,8 +15,21 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
     throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
-  const response = await BookModel.find().limit(limit).skip(page).populate(['uploadedBy', 'coverPhoto', 'category']).sort({ createdAt: 'desc' }).exec();
-  const totalItem = await BookModel.count();
+  const conditions: any = {};
+  conditions.deletedAt = null;
+  if (filter) {
+    if (filter.categories) conditions.categories = filter.categories;
+    if (filter.uploadedBy) conditions.uploadedBy = filter.uploadedBy;
+  }
+
+  const response = await BookModel.find({ title: new RegExp(search, 'i'), ...conditions, categories: { $in: conditions.categories } })
+    .limit(limit)
+    .skip(page)
+    .populate(['uploadedBy', 'coverPhoto', 'categories'])
+    .sort({ createdAt: 'desc' })
+    .exec();
+
+  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions, categories: { $in: conditions.categories } });
 
   const books: Books = {
     items: response,
