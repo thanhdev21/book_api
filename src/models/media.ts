@@ -9,7 +9,7 @@ const MediaSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: false },
     fileName: { type: String, required: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     size: { type: Number, required: false },
     type: { type: String, required: true },
     fileType: { type: String, required: true },
@@ -23,4 +23,4 @@ const MediaSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-export const MediaModel = mongoose.models['medias'] || mongoose.model<IMedia>('medias', MediaSchema, 'medias');
+export const MediaModel = mongoose.models['Media'] || mongoose.model<IMedia>('Media', MediaSchema, 'Media');

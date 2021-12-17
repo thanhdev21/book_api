@@ -18,18 +18,17 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
   const conditions: any = {};
   conditions.deletedAt = null;
   if (filter) {
-    if (filter.categories) conditions.categories = filter.categories;
+    if (filter.categories) conditions.categories = { $in: filter.categories };
     if (filter.uploadedBy) conditions.uploadedBy = filter.uploadedBy;
   }
-
-  const response = await BookModel.find({ title: new RegExp(search, 'i'), ...conditions, categories: { $in: conditions.categories } })
+  const response = await BookModel.find({ title: new RegExp(search, 'i'), ...conditions })
+    .populate(['categories', 'coverPhoto', 'uploadedBy'])
     .limit(limit)
     .skip(page)
-    .populate(['uploadedBy', 'coverPhoto', 'categories'])
     .sort({ createdAt: 'desc' })
     .exec();
 
-  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions, categories: { $in: conditions.categories } });
+  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions }).populate(['categories', 'coverPhoto', 'uploadedBy']);
 
   const books: Books = {
     items: response,

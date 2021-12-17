@@ -25,11 +25,7 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
 
   const book = await BookModel.findOne({ title });
 
-  const creator = await UserModel.findById(auth.userId);
-
   if (input.coverPhoto) await validateObjectIds(MediaModel, [input.coverPhoto]);
-
-  const media = await MediaModel.findById(input.coverPhoto);
 
   if (book) {
     throw makeGraphqlError('Book is already exist!', ErrorCodes.BadUserInput);
@@ -40,8 +36,8 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     description,
     isbn,
     author,
-    uploadedBy: creator,
-    coverPhoto: media,
+    uploadedBy: auth.userId,
+    coverPhoto: input.coverPhoto,
     categories,
   });
   await newBook.save();

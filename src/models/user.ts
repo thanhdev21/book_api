@@ -33,5 +33,5 @@ UserSchema.virtual('fullName').get(function (this: User) {
 });
 UserSchema.index({ email: 1 });
 
-const UserModel = mongoose.models['users'] || mongoose.model<IUser>('users', UserSchema, 'users');
+const UserModel = mongoose.models['User'] || mongoose.model<IUser>('User', UserSchema, 'User');
 export default UserModel;
