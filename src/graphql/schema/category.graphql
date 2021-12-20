@@ -19,6 +19,7 @@ type Category {
   description: String!
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date
 }
 
 input CreateCategoryInput {
