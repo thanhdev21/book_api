@@ -1,13 +1,14 @@
 import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import BookModel from '@/models/book';
 import CategoryModel from '@/models/category';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import { validatorUpdateCategory } from '@utils/validators';
+import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const updateCategory: MutationResolvers['updateCategory'] = async (_, { id, input }, context) => {
-  const { name, description } = input;
-  const { isValid, error } = validatorUpdateCategory(input);
+export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input }, context) => {
+  const { title, coverPhoto, categories, description, isbn, author } = input;
+  const { isValid, error } = validatorCreatBook(input);
   const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
@@ -17,18 +18,22 @@ export const updateCategory: MutationResolvers['updateCategory'] = async (_, { i
   const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
 
   if (!hasPermission) {
-    throw makeGraphqlError('Only admin and content creator can update category', ErrorCodes.Forbidden);
+    throw makeGraphqlError('Only admin and content creator can update book', ErrorCodes.Forbidden);
   }
 
-  const category = await CategoryModel.findById(id);
+  const book = await BookModel.findById(id);
 
-  if (!category) {
-    throw makeGraphqlError('Category does not exist!', ErrorCodes.BadUserInput);
+  if (!book) {
+    throw book('Book does not exist!', ErrorCodes.BadUserInput);
   }
 
-  category.name = name;
-  category.description = description;
-  await category.save;
+  book.title = title;
+  book.description = description;
+  book.coverPhoto = coverPhoto;
+  book.author = author;
+  book.isbn = isbn;
+  book.categories = categories;
+  await book.save();
 
-  return category;
+  return book;
 };

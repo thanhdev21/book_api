@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateBookInput, CreateCategoryInput, MutationLoginInput, RegisterInput, UpdateCategoryInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { CreateBookInput, CreateCategoryInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 
 export const validatorRegister = (input: RegisterInput) => {
   const { email, password, firstName, lastName } = input;
@@ -39,7 +39,7 @@ export const validatorLogin = (input: MutationLoginInput) => {
   return { error, isValid: Object.keys(error).length < 1 };
 };
 
-export const validatorCreatBook = (input: CreateBookInput) => {
+export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => {
   const { description, title, isbn } = input;
 
   let error: any = {};

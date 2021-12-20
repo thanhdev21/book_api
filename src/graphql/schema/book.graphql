@@ -22,9 +22,9 @@ type Book {
   uploadedBy: User!
   createdAt: Date
   updatedAt: Date
-  coverPhoto: Media!
+  coverPhoto: Media
   author: String!
-  categories: [Category!]!
+  categories: [Category!]
   deletedAt: Date
 }
 
@@ -37,32 +37,23 @@ input CreateBookInput {
   title: String!
   description: String!
   isbn: String!
-  coverPhoto: ID
+  coverPhoto: String
   author: String!
-  categories: [ID!]!
+  categories: [String!]
 }
 
 input UpdateBookInput {
   title: String!
   description: String!
   isbn: String!
-  coverPhoto: ID
+  coverPhoto: String
   author: String!
-  categories: [ID!]!
+  categories: [String!]
 }
 
 input BookFilter {
   categories: [String]
   uploadedBy: String
-}
-
-input UpdateBookInput {
-  title: String!
-  description: String!
-  isbn: String!
-  coverPhoto: ID
-  author: String!
-  categories: [ID!]!
 }
 
 input BookFilter {

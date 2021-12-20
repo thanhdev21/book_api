@@ -23,7 +23,7 @@ const PORT = env.port ? env.port : 32001;
 const app = express();
 app.use(cors());
 app.use('/storage', express.static(__dirname + '/storage'));
-app.use(graphqlUploadExpress());
+app.use(graphqlUploadExpress({ maxFileSize: 50000, maxFiles: 10 }));
 app.use(bodyParser.json());
 app.get('/', (_: express.Request, res: express.Response) => {
   return res.send('Hello book-shop Server!');

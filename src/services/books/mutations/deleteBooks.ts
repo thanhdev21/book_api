@@ -1,10 +1,7 @@
 import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
 import BookModel from '@/models/book';
-import CategoryModel from '@/models/category';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
-import { dateNow } from '@utils/date';
 import { makeGraphqlError } from '@utils/error';
-import { validatorUpdateCategory } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const deleteBook: MutationResolvers['deleteBook'] = async (_, { id }, context) => {
@@ -22,7 +19,7 @@ export const deleteBook: MutationResolvers['deleteBook'] = async (_, { id }, con
     throw makeGraphqlError('Book does not exist!', ErrorCodes.BadUserInput);
   }
 
-  book.deletedAt = null;
+  book.deletedAt = new Date();
 
   await book.save();
 

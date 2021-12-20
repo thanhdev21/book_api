@@ -22,13 +22,13 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
     if (filter.uploadedBy) conditions.uploadedBy = filter.uploadedBy;
   }
   const response = await BookModel.find({ title: new RegExp(search, 'i'), ...conditions })
-    .populate(['categories', 'coverPhoto', 'uploadedBy'])
+    .populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy'])
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
     .exec();
 
-  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions }).populate(['categories', 'coverPhoto', 'uploadedBy']);
+  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions }).populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy']);
 
   const books: Books = {
     items: response,
