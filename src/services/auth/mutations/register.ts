@@ -16,7 +16,7 @@ export const register: MutationResolvers['register'] = async (_, { input }) => {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
   }
 
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email: email.toLowerCase() });
 
   if (user && user.isConfirmed) {
     throw makeGraphqlError('User already exist!', ErrorCodes.BadUserInput);
@@ -25,7 +25,7 @@ export const register: MutationResolvers['register'] = async (_, { input }) => {
       const hashPassword = await bcrypt.hash(password, 12);
 
       const newUser = new UserModel({
-        email,
+        email: email.toLowerCase(),
         firstName,
         lastName,
         password: hashPassword,

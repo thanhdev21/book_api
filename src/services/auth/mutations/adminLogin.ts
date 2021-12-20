@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 export const adminLogin: MutationResolvers['adminLogin'] = async (_, { input }) => {
   const { email, password } = input;
   const { isValid, error } = validatorLogin(input);
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email: email.toLowerCase() });
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);

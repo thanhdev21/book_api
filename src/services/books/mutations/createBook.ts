@@ -40,7 +40,10 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     coverPhoto: input.coverPhoto,
     categories,
   });
-  await newBook.save();
 
-  return newBook;
+  return await newBook.save().then((res) =>
+    BookModel.findById(res._id)
+      .populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy'])
+      .exec(),
+  );
 };

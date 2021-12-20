@@ -1,5 +1,6 @@
 import env from '@/env';
 import { checkAuth } from '@/middleware/auth';
+import { MediaModel } from '@/models/media';
 import { createMedia } from '@business/media';
 import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
@@ -48,7 +49,7 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
     originUrl: uri,
   };
 
-  const media = await createMedia(createData);
+  const media = await createMedia(createData).then((res) => MediaModel.findById(res._id).populate('createdBy').exec());
 
   return media;
 };
