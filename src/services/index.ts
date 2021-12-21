@@ -1,5 +1,6 @@
 import { Resolvers, RoleCodes } from '@graphql/types/generated-graphql-types';
 import { authMutations } from './auth/mutations';
+import { authQuery } from './auth/queries';
 import { bookMutation } from './books/mutations';
 import { bookQueries } from './books/queries';
 import { categoryMutation } from './category/mutations';
@@ -20,6 +21,7 @@ const resolvers: Resolvers = {
     ...bookQueries,
     ...userQueries,
     ...categoryQuery,
+    ...authQuery,
   },
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,
