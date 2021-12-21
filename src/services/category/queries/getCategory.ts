@@ -12,7 +12,7 @@ export const getCategory: QueryResolvers['getCategory'] = async (_, { id }, cont
     throw makeGraphqlError('Only admin and content creator has permission', ErrorCodes.Forbidden);
   }
 
-  const category = await CategoryModel.findById(id).populate('uploadedBy').exec();
+  const category = await CategoryModel.findById(id).exec();
 
   if (!category) {
     throw makeGraphqlError('Category not found', ErrorCodes.BadUserInput);
