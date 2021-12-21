@@ -53,10 +53,17 @@ export type Books = {
   paginate?: Maybe<Paginate>;
 };
 
+export type Categories = {
+  __typename?: 'Categories';
+  items: Array<Category>;
+  paginate?: Maybe<Paginate>;
+};
+
 export type Category = {
   __typename?: 'Category';
   _id: Scalars['ID'];
   createdAt?: Maybe<Scalars['Date']>;
+  deletedAt?: Maybe<Scalars['Date']>;
   description: Scalars['String'];
   name: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
@@ -83,8 +90,8 @@ export type ClientPayload = {
 
 export type CreateBookInput = {
   author: Scalars['String'];
-  categories?: InputMaybe<Array<Scalars['ID']>>;
-  coverPhoto?: InputMaybe<Scalars['ID']>;
+  categories?: InputMaybe<Array<Scalars['String']>>;
+  coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   title: Scalars['String'];
@@ -302,7 +309,7 @@ export type Paginate = {
 export type Query = {
   __typename?: 'Query';
   getAllBooks: Books;
-  getAllCategories: Array<Category>;
+  getAllCategories: Categories;
   getAllMedia: Medias;
   getAllUsers: Users;
   getBook: Book;
@@ -315,6 +322,13 @@ export type Query = {
 
 export type QueryGetAllBooksArgs = {
   filter?: InputMaybe<BookFilter>;
+  pageIndex?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetAllCategoriesArgs = {
   pageIndex?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
   search?: InputMaybe<Scalars['String']>;
@@ -342,7 +356,7 @@ export type QueryGetBookArgs = {
 
 
 export type QueryGetCategoryArgs = {
-  id: Scalars['ID'];
+  id: Scalars['String'];
 };
 
 
@@ -366,8 +380,8 @@ export { RoleCodes };
 
 export type UpdateBookInput = {
   author: Scalars['String'];
-  categories: Array<Scalars['ID']>;
-  coverPhoto?: InputMaybe<Scalars['ID']>;
+  categories?: InputMaybe<Array<Scalars['String']>>;
+  coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   title: Scalars['String'];
@@ -503,6 +517,7 @@ export type ResolversTypes = {
   BookFilter: BookFilter;
   Books: ResolverTypeWrapper<Books>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Categories: ResolverTypeWrapper<Categories>;
   Category: ResolverTypeWrapper<Category>;
   ChangePasswordInput: ChangePasswordInput;
   ClientJWT: ResolverTypeWrapper<ClientJwt>;
@@ -548,6 +563,7 @@ export type ResolversParentTypes = {
   BookFilter: BookFilter;
   Books: Books;
   Boolean: Scalars['Boolean'];
+  Categories: Categories;
   Category: Category;
   ChangePasswordInput: ChangePasswordInput;
   ClientJWT: ClientJwt;
@@ -614,9 +630,16 @@ export type BooksResolvers<ContextType = GraphQLContext, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CategoriesResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Categories'] = ResolversParentTypes['Categories']> = {
+  items?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  paginate?: Resolver<Maybe<ResolversTypes['Paginate']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CategoryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
@@ -711,7 +734,7 @@ export type PaginateResolvers<ContextType = GraphQLContext, ParentType extends R
 
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllBooks?: Resolver<ResolversTypes['Books'], ParentType, ContextType, RequireFields<QueryGetAllBooksArgs, 'pageIndex' | 'pageSize'>>;
-  getAllCategories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  getAllCategories?: Resolver<ResolversTypes['Categories'], ParentType, ContextType, RequireFields<QueryGetAllCategoriesArgs, 'pageIndex' | 'pageSize'>>;
   getAllMedia?: Resolver<ResolversTypes['Medias'], ParentType, ContextType, RequireFields<QueryGetAllMediaArgs, 'pageIndex' | 'pageSize'>>;
   getAllUsers?: Resolver<ResolversTypes['Users'], ParentType, ContextType, RequireFields<QueryGetAllUsersArgs, 'pageIndex' | 'pageSize'>>;
   getBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<QueryGetBookArgs, 'id'>>;
@@ -753,6 +776,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   BaseMedia?: BaseMediaResolvers<ContextType>;
   Book?: BookResolvers<ContextType>;
   Books?: BooksResolvers<ContextType>;
+  Categories?: CategoriesResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   ClientJWT?: ClientJwtResolvers<ContextType>;
   ClientPayload?: ClientPayloadResolvers<ContextType>;

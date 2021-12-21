@@ -9,7 +9,7 @@ type Mutation {
 }
 
 type Query {
-  getAllCategories: [Category!]!
+  getAllCategories(pageSize: Int = 20, pageIndex: Int = 1, search: String): Categories!
   getCategory(id: String!): Category!
 }
 
@@ -20,6 +20,11 @@ type Category {
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
+}
+
+type Categories {
+  items: [Category!]!
+  paginate: Paginate
 }
 
 input CreateCategoryInput {

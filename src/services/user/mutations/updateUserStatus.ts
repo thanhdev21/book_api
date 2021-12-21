@@ -4,13 +4,10 @@ import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-
 import { makeGraphqlError } from '@utils/error';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const updateUserStatus: MutationResolvers['updateUserStatus'] = async (_, REQ, { auth }) => {
-  console.log('input', auth.uid, REQ);
+export const updateUserStatus: MutationResolvers['updateUserStatus'] = async (_, { id, input }, context) => {
+  const auth: JwtPayload = await checkAuth(context);
 
-  const { id, input } = REQ;
-  const authen: JwtPayload = await checkAuth(auth);
-
-  const isAdmin = checkIsAdmin(authen.userId);
+  const isAdmin = checkIsAdmin(auth.userId);
 
   if (!isAdmin) {
     throw makeGraphqlError('Only admin can update user status', ErrorCodes.Forbidden);
