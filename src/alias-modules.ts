@@ -17,6 +17,7 @@ export const modules = {
   '@middleware': 'middleware',
   '@events': 'events',
   '@dist': 'dist',
+  '@workers': 'workers',
 };
 
 const alias = {};

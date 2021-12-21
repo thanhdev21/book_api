@@ -1,17 +1,18 @@
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import { ApolloServer } from 'apollo-server-express';
-import cors from 'cors';
-import express from 'express';
-import { createServer } from 'http';
-import mongoose from 'mongoose';
-import './alias-modules';
-import env from './env';
+import { connect as MongoDbConnect } from '@database/mongodb';
 import schemaWithResolvers from '@graphql/schema';
 import { ErrorCodes } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { ApolloServer } from 'apollo-server-express';
 import bodyParser from 'body-parser';
-import { GraphQLContext } from '@graphql/types/graphql';
+import cors from 'cors';
+import express from 'express';
+import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
+import { createServer } from 'http';
+import './alias-modules';
+import env from './env';
+
+MongoDbConnect(true).then(() => true);
 
 const PORT = env.port ? env.port : 32001;
 
@@ -68,9 +69,9 @@ const httpServer = createServer(app);
  * func to start server
  */
 const run = async () => {
-  await mongoose.connect(process.env.MONGODB_URL, {}).then(async () => {
-    console.log(`🌧️  Mongodb connected 🌧️`);
-  });
+  // await mongoose.connect(process.env.MONGODB_URL, {}).then(async () => {
+  //   console.log(`🌧️  Mongodb connected 🌧️`);
+  // });
   // server.installSubscriptionHandlers(httpServer);
   await server.start();
   server.applyMiddleware({ app, cors: true });

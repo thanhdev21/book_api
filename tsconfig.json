@@ -27,7 +27,8 @@
       "@loaders/*": ["src/loaders/*"],
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
-      "@middleware": ["src/middleware/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@workers/*": ["src/workers/*"],
       "@/*": ["src/*"]
     },
 
