@@ -1,4 +1,4 @@
-import { connect as MongoDbConnect } from '@database/mongodb';
+import './alias-modules';
 import schemaWithResolvers from '@graphql/schema';
 import { ErrorCodes } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
@@ -9,7 +9,7 @@ import cors from 'cors';
 import express from 'express';
 import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
 import { createServer } from 'http';
-import './alias-modules';
+import { connect as MongoDbConnect } from '@database/mongodb';
 import env from './env';
 
 MongoDbConnect(true).then(() => true);

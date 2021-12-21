@@ -4,7 +4,6 @@ import '../firebase';
 import '../i18n';
 import './cron';
 
-import * as QueueNames from '@workers/bull/names';
 import debug from '@utils/debug';
 
 import createWorker from '@workers/bull/creates/worker';
