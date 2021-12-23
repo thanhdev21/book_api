@@ -1,6 +1,6 @@
 import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
 import BookModel from '@/models/book';
-import CategoryModel from '@/models/category';
+
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { validatorCreatBook } from '@utils/validators';
@@ -26,6 +26,8 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
   if (!book) {
     throw book('Book does not exist!', ErrorCodes.BadUserInput);
   }
+
+  const newRelatedBook = await BookModel.find({ categories: { $in: categories }, _id: { $not: book._id } }).distinct('_id');
 
   book.title = title;
   book.description = description;

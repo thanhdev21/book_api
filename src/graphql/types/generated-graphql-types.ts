@@ -37,6 +37,7 @@ export type Book = {
   deletedAt?: Maybe<Scalars['Date']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
+  relatedBooks?: Maybe<Array<Book>>;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
   uploadedBy: User;
@@ -94,6 +95,8 @@ export type CreateBookInput = {
   coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
+  price: Scalars['Int'];
+  relasedDate: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -103,6 +106,7 @@ export type CreateCategoryInput = {
 };
 
 export enum ErrorCodes {
+  AccountHasBeenIntactive = 'ACCOUNT_HAS_BEEN_INTACTIVE',
   BadUserInput = 'BAD_USER_INPUT',
   Forbidden = 'FORBIDDEN',
   GraphqlParseFailed = 'GRAPHQL_PARSE_FAILED',
@@ -384,6 +388,8 @@ export type UpdateBookInput = {
   coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
+  price: Scalars['Int'];
+  relasedDate: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -618,6 +624,7 @@ export type BookResolvers<ContextType = GraphQLContext, ParentType extends Resol
   deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  relatedBooks?: Resolver<Maybe<Array<ResolversTypes['Book']>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   uploadedBy?: Resolver<ResolversTypes['User'], ParentType, ContextType>;

@@ -9,7 +9,7 @@ import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const createBook: MutationResolvers['createBook'] = async (_, { input }, context) => {
-  const { title, description, isbn, categories, author } = input;
+  const { title, description, isbn, categories, author, price, relasedDate } = input;
   const { isValid, error } = validatorCreatBook(input);
   const auth: JwtPayload = await checkAuth(context);
 
@@ -31,6 +31,10 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     throw makeGraphqlError('Book is already exist!', ErrorCodes.BadUserInput);
   }
 
+  const relatedBooks = await BookModel.find({ categories: { $in: categories } }).distinct('_id');
+
+  console.log('relatedBooks', relatedBooks);
+
   const newBook = new BookModel({
     title,
     description,
@@ -39,6 +43,9 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     uploadedBy: auth.userId,
     coverPhoto: input.coverPhoto,
     categories,
+    price,
+    relasedDate: new Date(),
+    relatedBooks,
   });
 
   return await newBook.save().then((res) =>

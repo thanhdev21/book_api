@@ -25,7 +25,7 @@ export const forgotPassword: MutationResolvers['forgotPassword'] = async (_, { e
     algorithm: 'HS256',
   });
 
-  const resetPasswordlink = `http://localhost:3000/forgotpassword/newpassword?token=${resetPasswordToken}`;
+  const resetPasswordlink = `http://book-admin-reactjs-tranning.s3-website-ap-southeast-1.amazonaws.com/forgot-password/new-password?token=${resetPasswordToken}`;
 
   mailer.send(MAILER_CONFIG_ACCOUNT.confirmEmails.from, email, 'RESET YOUR PASSWORD', mailer.mailTemplateResetPassword(resetPasswordlink));
   user.resetPasswordToken = resetPasswordToken;

@@ -1,5 +1,6 @@
 import { EMAIL_REGEX } from '@constants/reg';
 import { CreateBookInput, CreateCategoryInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { isDate, isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
   const { email, password, firstName, lastName } = input;
@@ -40,7 +41,7 @@ export const validatorLogin = (input: MutationLoginInput) => {
 };
 
 export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => {
-  const { description, title, isbn } = input;
+  const { description, title, isbn, price, relasedDate } = input;
 
   let error: any = {};
   if (title.trim().length === 0) {
@@ -55,8 +56,12 @@ export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => 
     error.message = 'isbn is required';
   } else if (description.trim().length > 255) {
     error.message = 'Max 255 alphanumeric character';
+  } else if (isNaN(price)) {
+    error.message = 'Price must be a number';
   } else error = {};
-
+  // else if (!isDate(relasedDate)) {
+  //   error.message = 'Relased Date must be a Date';
+  // }
   return { error, isValid: Object.keys(error).length < 1 };
 };
 

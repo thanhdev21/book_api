@@ -13,7 +13,19 @@ export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => 
   }
 
   const book = await BookModel.findById(id)
-    .populate([{ path: 'categories', match: { deletedAt: null } }, { path: 'coverPhoto', match: { deleteAt: null } }, 'uploadedBy'])
+    .populate([
+      { path: 'categories', match: { deletedAt: null } },
+      { path: 'coverPhoto', match: { deleteAt: null } },
+      'uploadedBy',
+      {
+        path: 'relatedBooks',
+        populate: [
+          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+          { path: 'uploadedBy', model: 'User' },
+        ],
+      },
+    ])
     .exec();
 
   if (!book) {

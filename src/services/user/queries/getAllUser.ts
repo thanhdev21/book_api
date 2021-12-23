@@ -20,12 +20,12 @@ export const getAllUsers: QueryResolvers['getAllUsers'] = async (_, { pageIndex,
     if (filter.status) conditions.status = filter.status;
   }
 
-  const response = await UserModel.find({ role: 2, ...conditions, email: new RegExp(search, 'i') })
+  const response = await UserModel.find({ role: 2, ...conditions, $or: [{ email: new RegExp(search, 'i') }, { firstName: new RegExp(search, 'i') }, { lastName: new RegExp(search, 'i') }] })
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
     .exec();
-  const totalItem = await UserModel.find({ role: 2 }).count();
+  const totalItem = await UserModel.find({ role: 2, ...conditions, $or: [{ email: new RegExp(search, 'i') }, { firstName: new RegExp(search, 'i') }, { lastName: new RegExp(search, 'i') }] }).count();
 
   const users: Users = {
     items: response,

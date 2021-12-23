@@ -18,13 +18,13 @@ export const getAllCategories: QueryResolvers['getAllCategories'] = async (_, { 
   const conditions: any = {};
   conditions.deletedAt = null;
 
-  const response = await CategoryModel.find({ name: new RegExp(search, 'i'), ...conditions })
+  const response = await CategoryModel.find({ $or: [{ name: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }], ...conditions })
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
     .exec();
 
-  const totalItem = await CategoryModel.count({ name: new RegExp(search, 'i'), ...conditions });
+  const totalItem = await CategoryModel.count({ $or: [{ name: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }], ...conditions });
 
   const categories: Categories = {
     items: response,

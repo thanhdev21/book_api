@@ -21,14 +21,38 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
     if (filter.categories) conditions.categories = { $in: filter.categories };
     if (filter.uploadedBy) conditions.uploadedBy = filter.uploadedBy;
   }
-  const response = await BookModel.find({ title: new RegExp(search, 'i'), ...conditions })
-    .populate([{ path: 'categories', match: { deletedAt: null } }, { path: 'coverPhoto', match: { deleteAt: null } }, 'uploadedBy'])
+  const response = await BookModel.find({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions })
+    .populate([
+      { path: 'categories', match: { deletedAt: null } },
+      { path: 'coverPhoto', match: { deleteAt: null } },
+      'uploadedBy',
+      {
+        path: 'relatedBooks',
+        populate: [
+          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+          { path: 'uploadedBy', model: 'User' },
+        ],
+      },
+    ])
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
     .exec();
 
-  const totalItem = await BookModel.count({ title: new RegExp(search, 'i'), ...conditions }).populate([{ path: 'categories', match: { deletedAt: null } }, { path: 'coverPhoto', match: { deleteAt: null } }, 'uploadedBy']);
+  const totalItem = await BookModel.count({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions }).populate([
+    { path: 'categories', match: { deletedAt: null } },
+    { path: 'coverPhoto', match: { deleteAt: null } },
+    'uploadedBy',
+    {
+      path: 'relatedBooks',
+      populate: [
+        { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+        { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+        { path: 'uploadedBy', model: 'User' },
+      ],
+    },
+  ]);
 
   const books: Books = {
     items: response,

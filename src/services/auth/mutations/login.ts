@@ -1,5 +1,5 @@
 import UserModel from '@/models/user';
-import { ErrorCodes, MutationResolvers, RoleCodes } from '@graphql/types/generated-graphql-types';
+import { ErrorCodes, MutationResolvers, RoleCodes, UserStatus } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { buildJWTResponse } from '@utils/jwt';
 import { validatorLogin } from '@utils/validators';
@@ -20,6 +20,10 @@ export const login: MutationResolvers['login'] = async (_, { input }) => {
 
   if (user.role !== RoleCodes.USER) {
     throw makeGraphqlError('User does not already exist!', ErrorCodes.GraphqlValidationFailed);
+  }
+
+  if (user.status === UserStatus.Inactive) {
+    throw makeGraphqlError('Account has been Inactive!', ErrorCodes.AccountHasBeenIntactive);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
