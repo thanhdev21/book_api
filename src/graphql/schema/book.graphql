@@ -27,6 +27,7 @@ type Book {
   categories: [Category!]
   deletedAt: Date
   relatedBooks: [Book!]
+  content: Media!
 }
 
 type Books {
@@ -43,6 +44,7 @@ input CreateBookInput {
   categories: [String!]
   price: Int!
   relasedDate: String!
+  content: String!
 }
 
 input UpdateBookInput {
@@ -54,6 +56,7 @@ input UpdateBookInput {
   categories: [String!]
   price: Int!
   relasedDate: String!
+  content: String!
 }
 
 input BookFilter {

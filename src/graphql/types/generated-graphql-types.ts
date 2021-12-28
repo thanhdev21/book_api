@@ -32,6 +32,7 @@ export type Book = {
   _id: Scalars['ID'];
   author: Scalars['String'];
   categories?: Maybe<Array<Category>>;
+  content: Media;
   coverPhoto?: Maybe<Media>;
   createdAt?: Maybe<Scalars['Date']>;
   deletedAt?: Maybe<Scalars['Date']>;
@@ -92,6 +93,7 @@ export type ClientPayload = {
 export type CreateBookInput = {
   author: Scalars['String'];
   categories?: InputMaybe<Array<Scalars['String']>>;
+  content: Scalars['String'];
   coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
@@ -385,6 +387,7 @@ export { RoleCodes };
 export type UpdateBookInput = {
   author: Scalars['String'];
   categories?: InputMaybe<Array<Scalars['String']>>;
+  content: Scalars['String'];
   coverPhoto?: InputMaybe<Scalars['String']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
@@ -619,6 +622,7 @@ export type BookResolvers<ContextType = GraphQLContext, ParentType extends Resol
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
   coverPhoto?: Resolver<Maybe<ResolversTypes['Media']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;

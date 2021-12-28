@@ -9,7 +9,7 @@ import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const createBook: MutationResolvers['createBook'] = async (_, { input }, context) => {
-  const { title, description, isbn, categories, author, price, relasedDate } = input;
+  const { title, description, isbn, categories, author, price, relasedDate, content } = input;
   const { isValid, error } = validatorCreatBook(input);
   const auth: JwtPayload = await checkAuth(context);
 
@@ -33,8 +33,6 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
 
   const relatedBooks = await BookModel.find({ categories: { $in: categories } }).distinct('_id');
 
-  console.log('relatedBooks', relatedBooks);
-
   const newBook = new BookModel({
     title,
     description,
@@ -46,11 +44,12 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     price,
     relasedDate: new Date(),
     relatedBooks,
+    content,
   });
 
   return await newBook.save().then((res) =>
     BookModel.findById(res._id)
-      .populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy'])
+      .populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy', 'content'])
       .exec(),
   );
 };

@@ -13,6 +13,7 @@ const BookSchema = new mongoose.Schema(
     uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     author: { type: String, required: true },
     coverPhoto: { type: mongoose.Schema.Types.ObjectId, ref: 'Media', required: false },
+    content: { type: mongoose.Schema.Types.ObjectId, ref: 'Media', required: true },
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     deletedAt: {
       type: Date,

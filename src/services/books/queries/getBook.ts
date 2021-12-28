@@ -16,12 +16,14 @@ export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => 
     .populate([
       { path: 'categories', match: { deletedAt: null } },
       { path: 'coverPhoto', match: { deleteAt: null } },
+      { path: 'content', match: { deleteAt: null }, model: 'Media' },
       'uploadedBy',
       {
         path: 'relatedBooks',
         populate: [
           { path: 'categories', match: { deletedAt: null }, model: 'Category' },
           { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+          { path: 'content', match: { deleteAt: null }, model: 'Media' },
           { path: 'uploadedBy', model: 'User' },
         ],
       },
