@@ -28,6 +28,8 @@ type Book {
   deletedAt: Date
   relatedBooks: [Book!]
   content: Media!
+  price: Int
+  relasedDate: Date
 }
 
 type Books {
@@ -43,7 +45,7 @@ input CreateBookInput {
   author: String!
   categories: [String!]
   price: Int!
-  relasedDate: String!
+  relasedDate: Date!
   content: String!
 }
 
@@ -55,7 +57,7 @@ input UpdateBookInput {
   author: String!
   categories: [String!]
   price: Int!
-  relasedDate: String!
+  relasedDate: Date!
   content: String!
 }
 
