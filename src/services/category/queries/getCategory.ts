@@ -1,4 +1,4 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
@@ -6,10 +6,10 @@ import { makeGraphqlError } from '@utils/error';
 export const getCategory: QueryResolvers['getCategory'] = async (_, { id }, context) => {
   const auth = await checkAuth(context);
 
-  const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
+  const isVerified = await checkVerified(auth.userId);
 
-  if (!hasPermission) {
-    throw makeGraphqlError('Only admin and content creator has permission', ErrorCodes.Forbidden);
+  if (!isVerified) {
+    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
   const category = await CategoryModel.findById(id).exec();

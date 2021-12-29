@@ -1,16 +1,15 @@
-import BookModel from '@/models/book';
-import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified } from '@/middleware/auth';
+import CategoryModel from '@/models/category';
 import { Categories, ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import CategoryModel from '@/models/category';
 
 export const getAllCategories: QueryResolvers['getAllCategories'] = async (_, { pageSize, pageIndex, search }, context) => {
   const auth = await checkAuth(context);
 
-  const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
+  const isVerified = await checkVerified(auth.userId);
 
-  if (!hasPermission) {
-    throw makeGraphqlError('Only admin and content creator has permission', ErrorCodes.Forbidden);
+  if (!isVerified) {
+    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
