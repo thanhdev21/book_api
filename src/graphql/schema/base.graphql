@@ -37,7 +37,7 @@ enum ErrorCodes {
 enum MediaType {
   PHOTO
   VIDEO
-  FILE
+  PDF
   OTHER
 }
 
@@ -50,4 +50,10 @@ enum MediaStatus {
 enum UserStatus {
   ACTIVE
   INACTIVE
+}
+
+enum FeatureType {
+  ALBUM
+  LINK
+  HOT_BOOK
 }

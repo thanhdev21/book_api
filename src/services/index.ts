@@ -6,6 +6,7 @@ import { bookQueries } from './books/queries';
 import { categoryMutation } from './category/mutations';
 import { categoryQuery } from './category/queries';
 import { mediaMutation } from './media/mutations';
+import { mediaQuery } from './media/queries';
 import { userMutations } from './user/mutations';
 import { userQueries } from './user/queries';
 
@@ -22,6 +23,7 @@ const resolvers: Resolvers = {
     ...userQueries,
     ...categoryQuery,
     ...authQuery,
+    ...mediaQuery,
   },
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,

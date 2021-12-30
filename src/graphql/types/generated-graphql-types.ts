@@ -38,7 +38,9 @@ export type Book = {
   deletedAt?: Maybe<Scalars['Date']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
-  relatedBooks?: Maybe<Array<Book>>;
+  price?: Maybe<Scalars['Int']>;
+  relasedDate?: Maybe<Scalars['Date']>;
+  relatedBooks?: Maybe<Array<Maybe<Book>>>;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
   uploadedBy: User;
@@ -98,7 +100,7 @@ export type CreateBookInput = {
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  relasedDate: Scalars['String'];
+  relasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -117,6 +119,12 @@ export enum ErrorCodes {
   OtpExpire = 'OTP_EXPIRE',
   TokenExpire = 'TOKEN_EXPIRE',
   Unauthenticated = 'UNAUTHENTICATED'
+}
+
+export enum FeatureType {
+  Album = 'ALBUM',
+  HotBook = 'HOT_BOOK',
+  Link = 'LINK'
 }
 
 export type Jwt = {
@@ -159,8 +167,8 @@ export enum MediaStatus {
 }
 
 export enum MediaType {
-  File = 'FILE',
   Other = 'OTHER',
+  Pdf = 'PDF',
   Photo = 'PHOTO',
   Video = 'VIDEO'
 }
@@ -392,7 +400,7 @@ export type UpdateBookInput = {
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  relasedDate: Scalars['String'];
+  relasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -535,6 +543,7 @@ export type ResolversTypes = {
   CreateCategoryInput: CreateCategoryInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ErrorCodes: ErrorCodes;
+  FeatureType: FeatureType;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   JWT: ResolverTypeWrapper<Jwt>;
@@ -628,7 +637,9 @@ export type BookResolvers<ContextType = GraphQLContext, ParentType extends Resol
   deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  relatedBooks?: Resolver<Maybe<Array<ResolversTypes['Book']>>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  relasedDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  relatedBooks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   uploadedBy?: Resolver<ResolversTypes['User'], ParentType, ContextType>;

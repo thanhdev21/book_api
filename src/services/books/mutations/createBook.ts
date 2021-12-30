@@ -42,14 +42,28 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     coverPhoto: input.coverPhoto,
     categories,
     price,
-    relasedDate: new Date(),
+    relasedDate: relasedDate || new Date(),
     relatedBooks,
     content,
   });
 
   return await newBook.save().then((res) =>
     BookModel.findById(res._id)
-      .populate([{ path: 'categories', match: { deletedAt: null } }, 'coverPhoto', 'uploadedBy', 'content'])
+      .populate([
+        { path: 'categories', match: { deletedAt: null } },
+        'coverPhoto',
+        'uploadedBy',
+        'content',
+        {
+          path: 'relatedBooks',
+          populate: [
+            { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+            { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+            { path: 'content', match: { deleteAt: null }, model: 'Media' },
+            { path: 'uploadedBy', model: 'User' },
+          ],
+        },
+      ])
       .exec(),
   );
 };

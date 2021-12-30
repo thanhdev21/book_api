@@ -1,5 +1,6 @@
 import utf8 from 'utf8';
 import base64 from 'base-64';
+import { MediaType } from '@graphql/types/generated-graphql-types';
 
 export const randomNumber = (length: number) => {
   var text = '';
@@ -36,4 +37,18 @@ export const uniqueKeys = (keys: any[]) => {
   return keys.filter((key, index) => {
     return keys.indexOf(key) === index;
   });
+};
+
+export const genMediaType = (type: string) => {
+  console.log('type', type);
+  switch (type) {
+    case 'PHOTO':
+      return MediaType.Photo;
+    case 'VIDEO':
+      return MediaType.Video;
+    case 'PDF':
+      return MediaType.Pdf;
+    default:
+      return MediaType.Other;
+  }
 };

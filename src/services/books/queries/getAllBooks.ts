@@ -4,16 +4,16 @@ import { Books, ErrorCodes, QueryResolvers } from '@graphql/types/generated-grap
 import { makeGraphqlError } from '@utils/error';
 
 export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize, search, filter }, context) => {
-  const auth = await checkAuth(context);
+  // const auth = await checkAuth(context);
 
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
 
-  const isVerified = await checkVerified(auth.userId);
+  // const isVerified = await checkVerified(auth.userId);
 
-  if (!isVerified) {
-    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
-  }
+  // if (!isVerified) {
+  //   throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
+  // }
 
   const conditions: any = {};
   conditions.deletedAt = null;

@@ -12,7 +12,7 @@ export enum RoleCodes {
 export enum MediaType {
   PHOTO = 1,
   VIDEO = 2,
-  FILE = 3,
+  PDF = 3,
   OTHER = 4,
 }
 

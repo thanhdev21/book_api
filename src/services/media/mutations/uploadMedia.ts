@@ -5,7 +5,7 @@ import { createMedia } from '@business/media';
 import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { genFirebaseStorageFolderName, uploadFile } from '@utils/firebase-storage';
-import { allowedPdfType, allowedPhotoType, allowedVideoType } from '@utils/helpers';
+import { allowedPdfType, allowedPhotoType, allowedVideoType, genMediaType } from '@utils/helpers';
 import { makeSlug, streamToBuffer } from '@utils/upload';
 
 export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file }, context) => {
@@ -15,13 +15,17 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
   const auth = await checkAuth(context);
   const stream = createReadStream();
 
+  console.log('mimetype', mimetype);
+
   let uploadType: 'VIDEO' | 'IMAGE' | 'PDF' | null = null;
 
   if (allowedPhotoType(mimetype)) {
     uploadType = 'IMAGE';
-  } else if (allowedVideoType(mimetype)) {
+  }
+  if (allowedVideoType(mimetype)) {
     uploadType = 'VIDEO';
-  } else if (allowedPdfType(mimetype)) {
+  }
+  if (allowedPdfType(mimetype)) {
     uploadType = 'PDF';
   }
 
@@ -42,11 +46,11 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
     path: `${folderDir}/${filename}`,
     fileName: filename,
     fileType: mimetype,
-    type: MediaType.Photo,
     status: MediaStatus.Ready,
     size: undefined,
     title: filename,
     originUrl: uri,
+    type: genMediaType(uploadType),
   };
 
   const media = await createMedia(createData).then((res) => MediaModel.findById(res._id).populate('createdBy').exec());
