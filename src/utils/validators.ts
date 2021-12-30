@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateBookInput, CreateCategoryInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { CreateBookInput, CreateCategoryInput, CreateFeatureInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 import { isDate, isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
@@ -121,5 +121,29 @@ export const validatorUpdateCategory = (input: UpdateCategoryInput) => {
     error.message = 'Max 255 alphanumeric character';
   } else error = {};
 
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorFeatureInput = (input: CreateFeatureInput | UpdateFeatureInput) => {
+  const { title, description, coverPhoto, books, type, link } = input;
+  let error: any = {};
+  if (title.trim().length === 0) {
+    error.message = 'title is required';
+  } else if (title.trim().length > 255) {
+    error.message = ' Max 255 alphanumeric characters';
+  } else if (description.trim().length === 0) {
+    error.message = 'description is required';
+  } else if (description.trim().length > 255) {
+    error.message = 'Max 255 alphanumeric character';
+  } else if (!coverPhoto) {
+    error.message = 'coverPhoto is required';
+  } else if (!type) {
+    error.message = 'type is required';
+  } else if (!link) {
+    error.message = 'link is required';
+  } else error = {};
+  // else if (!isDate(relasedDate)) {
+  //   error.message = 'Relased Date must be a Date';
+  // }
   return { error, isValid: Object.keys(error).length < 1 };
 };

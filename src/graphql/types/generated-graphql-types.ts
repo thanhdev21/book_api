@@ -109,6 +109,15 @@ export type CreateCategoryInput = {
   name: Scalars['String'];
 };
 
+export type CreateFeatureInput = {
+  books?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  coverPhoto?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  link?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  type?: InputMaybe<FeatureType>;
+};
+
 export enum ErrorCodes {
   AccountHasBeenIntactive = 'ACCOUNT_HAS_BEEN_INTACTIVE',
   BadUserInput = 'BAD_USER_INPUT',
@@ -120,6 +129,21 @@ export enum ErrorCodes {
   TokenExpire = 'TOKEN_EXPIRE',
   Unauthenticated = 'UNAUTHENTICATED'
 }
+
+export type Feature = {
+  __typename?: 'Feature';
+  _id: Scalars['ID'];
+  amountBooks?: Maybe<Scalars['Int']>;
+  books?: Maybe<Array<Maybe<Book>>>;
+  coverPhoto?: Maybe<Media>;
+  createdAt?: Maybe<Scalars['Date']>;
+  deletedAt?: Maybe<Scalars['Date']>;
+  description: Scalars['String'];
+  link?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  type?: Maybe<FeatureType>;
+  updatedAt?: Maybe<Scalars['Date']>;
+};
 
 export enum FeatureType {
   Album = 'ALBUM',
@@ -185,8 +209,10 @@ export type Mutation = {
   changePassword: Scalars['Boolean'];
   createBook: Book;
   createCategory: Category;
+  createFeature: Feature;
   deleteBook?: Maybe<Scalars['Boolean']>;
   deleteCategory?: Maybe<Scalars['Boolean']>;
+  deleteFeature?: Maybe<Scalars['Boolean']>;
   forgotPassword: Scalars['Boolean'];
   login: Jwt;
   logout: Scalars['Boolean'];
@@ -196,6 +222,7 @@ export type Mutation = {
   resetPassword: Scalars['Boolean'];
   updateBook: Book;
   updateCategory: Category;
+  updateFeature: Feature;
   updateMedia: Media;
   updateUserStatus: User;
   uploadMedia: Media;
@@ -223,12 +250,22 @@ export type MutationCreateCategoryArgs = {
 };
 
 
+export type MutationCreateFeatureArgs = {
+  input: CreateFeatureInput;
+};
+
+
 export type MutationDeleteBookArgs = {
   id: Scalars['String'];
 };
 
 
 export type MutationDeleteCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteFeatureArgs = {
   id: Scalars['String'];
 };
 
@@ -281,6 +318,12 @@ export type MutationUpdateCategoryArgs = {
 };
 
 
+export type MutationUpdateFeatureArgs = {
+  id: Scalars['String'];
+  input: UpdateFeatureInput;
+};
+
+
 export type MutationUpdateMediaArgs = {
   data: UpdateMediaInput;
   id: Scalars['String'];
@@ -324,10 +367,12 @@ export type Query = {
   __typename?: 'Query';
   getAllBooks: Books;
   getAllCategories: Categories;
+  getAllFeatures: Array<Feature>;
   getAllMedia: Medias;
   getAllUsers: Users;
   getBook: Book;
   getCategory: Category;
+  getFeature: Feature;
   getMedia: Media;
   getUser: User;
   me?: Maybe<User>;
@@ -374,6 +419,11 @@ export type QueryGetCategoryArgs = {
 };
 
 
+export type QueryGetFeatureArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryGetMediaArgs = {
   id: Scalars['String'];
 };
@@ -407,6 +457,15 @@ export type UpdateBookInput = {
 export type UpdateCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
+};
+
+export type UpdateFeatureInput = {
+  books?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  coverPhoto?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  link?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  type?: InputMaybe<FeatureType>;
 };
 
 export type UpdateMediaInput = {
@@ -541,8 +600,10 @@ export type ResolversTypes = {
   ClientPayload: ResolverTypeWrapper<ClientPayload>;
   CreateBookInput: CreateBookInput;
   CreateCategoryInput: CreateCategoryInput;
+  CreateFeatureInput: CreateFeatureInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   ErrorCodes: ErrorCodes;
+  Feature: ResolverTypeWrapper<Feature>;
   FeatureType: FeatureType;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -563,6 +624,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   UpdateBookInput: UpdateBookInput;
   UpdateCategoryInput: UpdateCategoryInput;
+  UpdateFeatureInput: UpdateFeatureInput;
   UpdateMediaInput: UpdateMediaInput;
   UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
@@ -588,7 +650,9 @@ export type ResolversParentTypes = {
   ClientPayload: ClientPayload;
   CreateBookInput: CreateBookInput;
   CreateCategoryInput: CreateCategoryInput;
+  CreateFeatureInput: CreateFeatureInput;
   Date: Scalars['Date'];
+  Feature: Feature;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   JWT: Jwt;
@@ -604,6 +668,7 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   UpdateBookInput: UpdateBookInput;
   UpdateCategoryInput: UpdateCategoryInput;
+  UpdateFeatureInput: UpdateFeatureInput;
   UpdateMediaInput: UpdateMediaInput;
   UpdateUserStatusInput: UpdateUserStatusInput;
   Upload: Scalars['Upload'];
@@ -686,6 +751,21 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
+export type FeatureResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Feature'] = ResolversParentTypes['Feature']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  amountBooks?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  books?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
+  coverPhoto?: Resolver<Maybe<ResolversTypes['Media']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  link?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['FeatureType']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type JwtResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['JWT'] = ResolversParentTypes['JWT']> = {
   expiresAt?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   payload?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -729,8 +809,10 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   changePassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'data'>>;
   createBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'input'>>;
   createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'input'>>;
+  createFeature?: Resolver<ResolversTypes['Feature'], ParentType, ContextType, RequireFields<MutationCreateFeatureArgs, 'input'>>;
   deleteBook?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteBookArgs, 'id'>>;
   deleteCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteCategoryArgs, 'id'>>;
+  deleteFeature?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteFeatureArgs, 'id'>>;
   forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
   login?: Resolver<ResolversTypes['JWT'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLogoutArgs, 'refreshToken'>>;
@@ -740,6 +822,7 @@ export type MutationResolvers<ContextType = GraphQLContext, ParentType extends R
   resetPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'password' | 'token'>>;
   updateBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'id' | 'input'>>;
   updateCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationUpdateCategoryArgs, 'input'>>;
+  updateFeature?: Resolver<ResolversTypes['Feature'], ParentType, ContextType, RequireFields<MutationUpdateFeatureArgs, 'id' | 'input'>>;
   updateMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUpdateMediaArgs, 'data' | 'id'>>;
   updateUserStatus?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserStatusArgs, 'id' | 'input'>>;
   uploadMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<MutationUploadMediaArgs, 'file'>>;
@@ -757,10 +840,12 @@ export type PaginateResolvers<ContextType = GraphQLContext, ParentType extends R
 export type QueryResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllBooks?: Resolver<ResolversTypes['Books'], ParentType, ContextType, RequireFields<QueryGetAllBooksArgs, 'pageIndex' | 'pageSize'>>;
   getAllCategories?: Resolver<ResolversTypes['Categories'], ParentType, ContextType, RequireFields<QueryGetAllCategoriesArgs, 'pageIndex' | 'pageSize'>>;
+  getAllFeatures?: Resolver<Array<ResolversTypes['Feature']>, ParentType, ContextType>;
   getAllMedia?: Resolver<ResolversTypes['Medias'], ParentType, ContextType, RequireFields<QueryGetAllMediaArgs, 'pageIndex' | 'pageSize'>>;
   getAllUsers?: Resolver<ResolversTypes['Users'], ParentType, ContextType, RequireFields<QueryGetAllUsersArgs, 'pageIndex' | 'pageSize'>>;
   getBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<QueryGetBookArgs, 'id'>>;
   getCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<QueryGetCategoryArgs, 'id'>>;
+  getFeature?: Resolver<ResolversTypes['Feature'], ParentType, ContextType, RequireFields<QueryGetFeatureArgs, 'id'>>;
   getMedia?: Resolver<ResolversTypes['Media'], ParentType, ContextType, RequireFields<QueryGetMediaArgs, 'id'>>;
   getUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -803,6 +888,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   ClientJWT?: ClientJwtResolvers<ContextType>;
   ClientPayload?: ClientPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  Feature?: FeatureResolvers<ContextType>;
   JWT?: JwtResolvers<ContextType>;
   Media?: MediaResolvers<ContextType>;
   Medias?: MediasResolvers<ContextType>;

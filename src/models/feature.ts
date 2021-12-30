@@ -2,11 +2,11 @@ import { Feature } from '@graphql/types/generated-graphql-types';
 
 import mongoose from 'mongoose';
 
-interface ICategory extends mongoose.Document, Feature {
+interface IFeature extends mongoose.Document, Feature {
   _id: mongoose.Schema.Types.ObjectId;
 }
 
-const CategorySchema = new mongoose.Schema(
+const FeatureSchema = new mongoose.Schema(
   {
     amountBook: { type: mongoose.Schema.Types.Number, nullable: true, required: false },
     books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
@@ -19,6 +19,6 @@ const CategorySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-const CategoryModel = mongoose.models['Category'] || mongoose.model<ICategory>('Category', CategorySchema, 'Category');
+const FeatureModel = mongoose.models['Feature'] || mongoose.model<IFeature>('Feature', FeatureSchema, 'Feature');
 
-export default CategoryModel;
+export default FeatureModel;
