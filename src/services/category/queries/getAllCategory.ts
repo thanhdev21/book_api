@@ -4,13 +4,13 @@ import { Categories, ErrorCodes, QueryResolvers } from '@graphql/types/generated
 import { makeGraphqlError } from '@utils/error';
 
 export const getAllCategories: QueryResolvers['getAllCategories'] = async (_, { pageSize, pageIndex, search }, context) => {
-  const auth = await checkAuth(context);
+  // const auth = await checkAuth(context);
 
-  const isVerified = await checkVerified(auth.userId);
+  // const isVerified = await checkVerified(auth.userId);
 
-  if (!isVerified) {
-    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
-  }
+  // if (!isVerified) {
+  //   throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
+  // }
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
 
