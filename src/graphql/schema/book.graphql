@@ -5,13 +5,13 @@
 
 type Mutation {
   createBook(input: CreateBookInput!): Book!
-  updateBook(id: String!, input: UpdateBookInput!): Book!
-  deleteBook(id: String!): Boolean
+  updateBook(id: ID!, input: UpdateBookInput!): Book!
+  deleteBook(id: ID!): Boolean
 }
 
 type Query {
   getAllBooks(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: BookFilter): Books!
-  getBook(id: String!): Book!
+  getBook(id: ID!): Book!
 }
 
 type Book {

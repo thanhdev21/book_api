@@ -1,12 +1,12 @@
 # import * from "./base.graphql"
 
 type Mutation {
-  updateUserStatus(id: String!, input: UpdateUserStatusInput!): User!
+  updateUserStatus(id: ID!, input: UpdateUserStatusInput!): User!
 }
 
 type Query {
   getAllUsers(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: UserFilter): Users!
-  getUser(id: String!): User!
+  getUser(id: ID!): User!
 }
 
 type User {

@@ -256,17 +256,17 @@ export type MutationCreateFeatureArgs = {
 
 
 export type MutationDeleteBookArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationDeleteCategoryArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationDeleteFeatureArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -307,31 +307,31 @@ export type MutationResetPasswordArgs = {
 
 
 export type MutationUpdateBookArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: UpdateBookInput;
 };
 
 
 export type MutationUpdateCategoryArgs = {
-  id?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
   input: UpdateCategoryInput;
 };
 
 
 export type MutationUpdateFeatureArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: UpdateFeatureInput;
 };
 
 
 export type MutationUpdateMediaArgs = {
   data: UpdateMediaInput;
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationUpdateUserStatusArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: UpdateUserStatusInput;
 };
 
@@ -410,27 +410,27 @@ export type QueryGetAllUsersArgs = {
 
 
 export type QueryGetBookArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryGetCategoryArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryGetFeatureArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryGetMediaArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryGetUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type RegisterInput = {

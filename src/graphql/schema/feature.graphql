@@ -6,13 +6,13 @@
 
 type Mutation {
   createFeature(input: CreateFeatureInput!): Feature!
-  updateFeature(id: String!, input: UpdateFeatureInput!): Feature!
-  deleteFeature(id: String!): Boolean
+  updateFeature(id: ID!, input: UpdateFeatureInput!): Feature!
+  deleteFeature(id: ID!): Boolean
 }
 
 type Query {
   getAllFeatures: [Feature!]!
-  getFeature(id: String!): Feature!
+  getFeature(id: ID!): Feature!
 }
 
 type Feature {

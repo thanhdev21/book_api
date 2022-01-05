@@ -3,12 +3,12 @@
 
 type Mutation {
   uploadMedia(file: Upload!): Media!
-  updateMedia(id: String!, data: UpdateMediaInput!): Media!
+  updateMedia(id: ID!, data: UpdateMediaInput!): Media!
 }
 
 type Query {
   getAllMedia(pageSize: Int = 20, pageIndex: Int = 1, filter: MediaFilterInput): Medias!
-  getMedia(id: String!): Media!
+  getMedia(id: ID!): Media!
 }
 
 type Medias {

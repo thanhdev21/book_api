@@ -10,21 +10,6 @@ const schema = makeExecutableSchema({
   typeDefs: typeDefs,
   resolvers: {
     ...resolvers,
-    ID: {
-      parseValue: (value) => {
-        const id = parseInt(value);
-        if (Number.isNaN(id)) {
-          return parseInt(value);
-        }
-        return id;
-      },
-      serialize: (value) => {
-        return value.toString();
-      },
-      parseLiteral: (ast) => {
-        return ast.value;
-      },
-    },
   },
 });
 
