@@ -13,7 +13,7 @@ export const getAllFeatures: QueryResolvers['getAllFeatures'] = async (_, __, co
     throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
-  const response = await FeatureModel.find()
+  const response = await FeatureModel.find({ deletedAt: null })
     .populate([
       { path: 'books', match: { deletedAt: null } },
       { path: 'coverPhoto', match: { deleteAt: null } },
