@@ -7,7 +7,7 @@ import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input }, context) => {
-  const { title, coverPhoto, categories, description, isbn, author, relasedDate } = input;
+  const { title, coverPhoto, categories, description, isbn, author, relasedDate, price, content } = input;
   const { isValid, error } = validatorCreatBook(input);
   const auth: JwtPayload = await checkAuth(context);
 
@@ -37,6 +37,8 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
   book.categories = categories;
   book.relatedBooks = newRelatedBook;
   book.relasedDate = relasedDate || new Date();
+  book.price = price;
+  book.content = content;
   await book.save().then((res) =>
     BookModel.findById(res._id)
       .populate([
