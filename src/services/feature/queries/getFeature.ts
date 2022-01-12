@@ -5,14 +5,6 @@ import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-typ
 import { makeGraphqlError } from '@utils/error';
 
 export const getFeature: QueryResolvers['getFeature'] = async (_, { id }, context) => {
-  const auth = await checkAuth(context);
-
-  const isVerified = await checkVerified(auth.userId);
-
-  if (!isVerified) {
-    throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
-  }
-
   const feature = await FeatureModel.findById(id)
     .populate([
       { path: 'books', match: { deletedAt: null } },
