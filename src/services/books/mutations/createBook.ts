@@ -23,7 +23,7 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
     throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
   }
 
-  const book = await BookModel.findOne({ title });
+  const book = await BookModel.findOne({ title, deletedAt: null });
 
   if (input.coverPhoto) await validateObjectIds(MediaModel, [input.coverPhoto]);
 

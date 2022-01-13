@@ -27,6 +27,10 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
     throw book('Book does not exist!', ErrorCodes.BadUserInput);
   }
 
+  if (book.title === title) {
+    throw book('Book already exist!', ErrorCodes.BadUserInput);
+  }
+
   const newRelatedBook = await BookModel.find({ categories: { $in: categories }, _id: { $ne: book._id } }).distinct('_id');
 
   book.title = title;

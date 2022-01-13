@@ -20,7 +20,7 @@ export const createCategory: MutationResolvers['createCategory'] = async (_, { i
     throw makeGraphqlError('Only admin and content creator can create category', ErrorCodes.Forbidden);
   }
 
-  const category = await CategoryModel.findOne({ name });
+  const category = await CategoryModel.findOne({ name, deletedAt: null });
 
   if (category) {
     throw makeGraphqlError('Category is already exist!', ErrorCodes.BadUserInput);

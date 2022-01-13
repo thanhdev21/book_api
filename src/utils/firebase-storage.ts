@@ -23,7 +23,7 @@ const storageRef = admin.storage().bucket(`gs://book-backend-traning.appspot.com
 export const uploadFile = async (buffer, filename, folder) => {
   // Upload the File
 
-  const file = storageRef.file(`${folder}/${filename}`);
+  const file = storageRef.file(`${folder}/${new Date().getMilliseconds + filename}`);
   return file
     .save(buffer)
     .then((stuff) => {
