@@ -7,7 +7,16 @@ import { makeGraphqlError } from '@utils/error';
 export const getFeature: QueryResolvers['getFeature'] = async (_, { id }, context) => {
   const feature = await FeatureModel.findById(id)
     .populate([
-      { path: 'books', match: { deletedAt: null } },
+      {
+        path: 'books',
+        populate: [
+          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+          { path: 'content', match: { deleteAt: null }, model: 'Media' },
+          { path: 'uploadedBy', model: 'User' },
+        ],
+        match: { deletedAt: null },
+      },
       { path: 'coverPhoto', match: { deleteAt: null } },
     ])
     .exec();
