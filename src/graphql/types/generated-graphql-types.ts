@@ -39,8 +39,8 @@ export type Book = {
   description: Scalars['String'];
   isbn: Scalars['String'];
   price?: Maybe<Scalars['Int']>;
-  relasedDate?: Maybe<Scalars['Date']>;
   relatedBooks?: Maybe<Array<Maybe<Book>>>;
+  releasedDate?: Maybe<Scalars['Date']>;
   title: Scalars['String'];
   updatedAt?: Maybe<Scalars['Date']>;
   uploadedBy: User;
@@ -95,12 +95,12 @@ export type ClientPayload = {
 export type CreateBookInput = {
   author: Scalars['String'];
   categories?: InputMaybe<Array<Scalars['String']>>;
-  content: Scalars['String'];
-  coverPhoto?: InputMaybe<Scalars['String']>;
+  content: Scalars['ID'];
+  coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  relasedDate: Scalars['Date'];
+  releasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -445,12 +445,12 @@ export { RoleCodes };
 export type UpdateBookInput = {
   author: Scalars['String'];
   categories?: InputMaybe<Array<Scalars['String']>>;
-  content: Scalars['String'];
-  coverPhoto?: InputMaybe<Scalars['String']>;
+  content: Scalars['ID'];
+  coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  relasedDate: Scalars['Date'];
+  releasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -703,8 +703,8 @@ export type BookResolvers<ContextType = GraphQLContext, ParentType extends Resol
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isbn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  relasedDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   relatedBooks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Book']>>>, ParentType, ContextType>;
+  releasedDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   uploadedBy?: Resolver<ResolversTypes['User'], ParentType, ContextType>;

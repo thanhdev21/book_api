@@ -41,7 +41,7 @@ export const validatorLogin = (input: MutationLoginInput) => {
 };
 
 export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => {
-  const { description, title, isbn, price, relasedDate } = input;
+  const { description, title, isbn, price, releasedDate } = input;
 
   let error: any = {};
   if (title.trim().length === 0) {

@@ -7,7 +7,7 @@ import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input }, context) => {
-  const { title, coverPhoto, categories, description, isbn, author, relasedDate, price, content } = input;
+  const { title, coverPhoto, categories, description, isbn, author, releasedDate, price, content } = input;
   const { isValid, error } = validatorCreatBook(input);
   const auth: JwtPayload = await checkAuth(context);
 
@@ -27,10 +27,6 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
     throw book('Book does not exist!', ErrorCodes.BadUserInput);
   }
 
-  if (book.title === title) {
-    throw book('Book already exist!', ErrorCodes.BadUserInput);
-  }
-
   const newRelatedBook = await BookModel.find({ categories: { $in: categories }, _id: { $ne: book._id } }).distinct('_id');
 
   book.title = title;
@@ -40,13 +36,13 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
   book.isbn = isbn;
   book.categories = categories;
   book.relatedBooks = newRelatedBook;
-  book.relasedDate = relasedDate || new Date();
+  book.releasedDate = releasedDate || new Date();
   book.price = price;
   book.content = content;
   await book.save().then((res) =>
     BookModel.findById(res._id)
       .populate([
-        { path: 'categories', match: { deletedAt: null } },
+        { path: 'categories', match: { deletedAt: null }, model: 'Category' },
         'coverPhoto',
         'uploadedBy',
         'content',
@@ -58,6 +54,7 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
             { path: 'content', match: { deleteAt: null }, model: 'Media' },
             { path: 'uploadedBy', model: 'User' },
           ],
+          // model: 'Book',
         },
       ])
       .exec(),

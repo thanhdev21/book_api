@@ -29,7 +29,7 @@ type Book {
   relatedBooks: [Book]
   content: Media!
   price: Int
-  relasedDate: Date
+  releasedDate: Date
 }
 
 type Books {
@@ -41,24 +41,24 @@ input CreateBookInput {
   title: String!
   description: String!
   isbn: String!
-  coverPhoto: String
+  coverPhoto: ID
   author: String!
   categories: [String!]
   price: Int!
-  relasedDate: Date!
-  content: String!
+  releasedDate: Date!
+  content: ID!
 }
 
 input UpdateBookInput {
   title: String!
   description: String!
   isbn: String!
-  coverPhoto: String
+  coverPhoto: ID
   author: String!
   categories: [String!]
   price: Int!
-  relasedDate: Date!
-  content: String!
+  releasedDate: Date!
+  content: ID!
 }
 
 input BookFilter {
