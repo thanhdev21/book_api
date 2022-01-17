@@ -50,12 +50,8 @@ export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => 
     error.message = ' Max 255 alphanumeric characters';
   } else if (description.trim().length === 0) {
     error.message = 'description is required';
-  } else if (description.trim().length > 255) {
-    error.message = 'Max 255 alphanumeric character';
   } else if (isbn.trim().length === 0) {
     error.message = 'isbn is required';
-  } else if (description.trim().length > 255) {
-    error.message = 'Max 255 alphanumeric character';
   } else if (isNaN(price)) {
     error.message = 'Price must be a number';
   } else error = {};
@@ -100,8 +96,6 @@ export const validatorCreateCategory = (input: CreateCategoryInput) => {
     error.message = ' Max 100 alphanumeric characters';
   } else if (description.trim().length === 0) {
     error.message = 'description is required';
-  } else if (description.trim().length > 255) {
-    error.message = 'Max 255 alphanumeric character';
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };
@@ -117,8 +111,6 @@ export const validatorUpdateCategory = (input: UpdateCategoryInput) => {
     error.message = ' Max 100 alphanumeric characters';
   } else if (description.trim().length === 0) {
     error.message = 'description is required';
-  } else if (description.trim().length > 255) {
-    error.message = 'Max 255 alphanumeric character';
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };
@@ -133,8 +125,6 @@ export const validatorFeatureInput = (input: CreateFeatureInput | UpdateFeatureI
     error.message = ' Max 255 alphanumeric characters';
   } else if (description.trim().length === 0) {
     error.message = 'description is required';
-  } else if (description.trim().length > 255) {
-    error.message = 'Max 255 alphanumeric character';
   } else if (!coverPhoto) {
     error.message = 'coverPhoto is required';
   } else if (!type) {
