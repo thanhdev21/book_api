@@ -1,7 +1,5 @@
 import BookModel from '@/models/book';
-import { checkAuth, checkVerified } from '@/middleware/auth';
-import { Books, ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
-import { makeGraphqlError } from '@utils/error';
+import { Books, QueryResolvers } from '@graphql/types/generated-graphql-types';
 
 export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex, pageSize, search, filter }, context) => {
   // const auth = await checkAuth(context);

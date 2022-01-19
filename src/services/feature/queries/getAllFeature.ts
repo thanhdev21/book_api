@@ -2,7 +2,10 @@ import FeatureModel from '@/models/feature';
 import { QueryResolvers } from '@graphql/types/generated-graphql-types';
 
 export const getAllFeatures: QueryResolvers['getAllFeatures'] = async (_, __, context) => {
-  const response = await FeatureModel.find({ deletedAt: null })
+  const conditions: any = {};
+  conditions.deletedAt = null;
+
+  const response = await FeatureModel.find({ ...conditions })
     .populate([
       {
         path: 'books',

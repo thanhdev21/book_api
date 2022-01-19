@@ -1,7 +1,6 @@
 import { checkAuth, checkVerified } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import { MediaModel } from '@/models/media';
-import UserModel from '@/models/user';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { validateObjectIds } from '@utils/database';
 import { makeGraphqlError } from '@utils/error';
@@ -30,8 +29,11 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
   if (book) {
     throw makeGraphqlError('Book is already exist!', ErrorCodes.BadUserInput);
   }
-
-  const relatedBooks = await BookModel.find({ categories: { $in: categories } }).distinct('_id');
+  const conditions: any = {};
+  conditions.categories = { $in: categories };
+  const relatedBooks = await BookModel.find({ ...conditions })
+    .distinct('_id')
+    .exec();
 
   const newBook = new BookModel({
     title,

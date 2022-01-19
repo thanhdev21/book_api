@@ -14,7 +14,7 @@ export enum JWTAuthTokenType {
 }
 
 export interface JWTAuthTokenPayload {
-  tokenId: mongoose.Schema.Types.ObjectId;
+  tokenId: mongoose.Types.ObjectId;
   userId: mongoose.Schema.Types.ObjectId;
   email?: string;
   username?: string;
@@ -22,11 +22,11 @@ export interface JWTAuthTokenPayload {
   exp?: number;
   type: JWTAuthTokenType;
   isVerified?: boolean;
-  metaId: number;
+  metaId: mongoose.Types.ObjectId;
 }
 
 export interface JWTClientAuthPayload {
-  tokenId: mongoose.Schema.Types.ObjectId;
+  tokenId: mongoose.Types.ObjectId;
   clientId?: string;
   uid: mongoose.Schema.Types.ObjectId;
   iat?: number;
