@@ -30,6 +30,6 @@ BookSchema.index({ title: 'text' });
 BookSchema.index({ description: 'text' });
 BookSchema.index({ author: 'text' });
 
-const BookModel = mongoose.models['Book'] || mongoose.model<IBook>('Book', BookSchema, 'Book');
+const BookModel = mongoose.models['Book'] || mongoose.model('Book', BookSchema, 'Book');
 
 export default BookModel;

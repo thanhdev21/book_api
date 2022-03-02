@@ -19,6 +19,6 @@ const FeatureSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-const FeatureModel = mongoose.models['Feature'] || mongoose.model<IFeature>('Feature', FeatureSchema, 'Feature');
+const FeatureModel = mongoose.models['Feature'] || mongoose.model('Feature', FeatureSchema, 'Feature');
 
 export default FeatureModel;
