@@ -1,5 +1,5 @@
 import { User, UserStatus } from '@graphql/types/generated-graphql-types';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 interface IUser extends mongoose.Document, User {
   _id: string;

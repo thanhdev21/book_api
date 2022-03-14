@@ -1,5 +1,5 @@
 import { Category } from '@graphql/types/generated-graphql-types';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 interface ICategory extends mongoose.Document, Category {
   _id: mongoose.Schema.Types.ObjectId;
@@ -16,6 +16,6 @@ const CategorySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-const CategoryModel = mongoose.models['Category'] || mongoose.model('Category', CategorySchema, 'Category');
+const CategoryModel: any = mongoose.models['Category'] || mongoose.model('Category', CategorySchema, 'Category');
 
 export default CategoryModel;

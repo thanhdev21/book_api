@@ -1,5 +1,5 @@
 import { Media, MediaStatus } from '@graphql/types/generated-graphql-types';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 interface IMedia extends mongoose.Document, Media {
   _id: mongoose.Schema.Types.ObjectId;
 }
@@ -23,4 +23,4 @@ const MediaSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-export const MediaModel = mongoose.models['Media'] || mongoose.model('Media', MediaSchema, 'Media');
+export const MediaModel: any = mongoose.models['Media'] || mongoose.model('Media', MediaSchema, 'Media');

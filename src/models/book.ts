@@ -1,5 +1,5 @@
 import { Book } from '@graphql/types/generated-graphql-types';
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { Mongoose, Model } from 'mongoose';
 
 interface IBook extends mongoose.Document, Book {
   _id: mongoose.Schema.Types.ObjectId;
@@ -30,6 +30,6 @@ BookSchema.index({ title: 'text' });
 BookSchema.index({ description: 'text' });
 BookSchema.index({ author: 'text' });
 
-const BookModel = mongoose.models['Book'] || mongoose.model('Book', BookSchema, 'Book');
+const BookModel: any = mongoose.models['Book'] || mongoose.model('Book', BookSchema, 'Book');
 
 export default BookModel;

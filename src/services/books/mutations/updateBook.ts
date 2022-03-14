@@ -24,7 +24,7 @@ export const updateBook: MutationResolvers['updateBook'] = async (_, { id, input
   const book = await BookModel.findById(id);
 
   if (!book) {
-    throw book('Book does not exist!', ErrorCodes.BadUserInput);
+    throw makeGraphqlError('Book does not exist!', ErrorCodes.BadUserInput);
   }
 
   const conditions: any = {};

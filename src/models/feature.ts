@@ -1,6 +1,6 @@
 import { Feature } from '@graphql/types/generated-graphql-types';
 
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 interface IFeature extends mongoose.Document, Feature {
   _id: mongoose.Schema.Types.ObjectId;
@@ -19,6 +19,6 @@ const FeatureSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-const FeatureModel = mongoose.models['Feature'] || mongoose.model('Feature', FeatureSchema, 'Feature');
+const FeatureModel: any = mongoose.models['Feature'] || mongoose.model('Feature', FeatureSchema, 'Feature');
 
 export default FeatureModel;

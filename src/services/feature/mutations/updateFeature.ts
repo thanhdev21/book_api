@@ -28,7 +28,7 @@ export const updateFeature: MutationResolvers['updateFeature'] = async (_, { id,
 
   feature.title = title;
   feature.description = description;
-  feature.coverPhoto = coverPhoto;
+  coverPhoto;
   feature.link = link;
   feature.books = books;
   feature.type = type;
