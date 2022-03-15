@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateBookInput, CreateCategoryInput, CreateFeatureInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 import { isDate, isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
@@ -98,6 +98,25 @@ export const validatorCreateCategory = (input: CreateCategoryInput) => {
     error.message = ' Max 100 alphanumeric characters';
   } else if (description.trim().length === 0) {
     error.message = 'description is required';
+  } else error = {};
+
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorCreatePublisher = (input: CreatePublisherInput | UpdatePublisherInput) => {
+  const { description, name, address, logo, registedDate } = input;
+
+  let error: any = {};
+  if (name.trim().length === 0) {
+    error.message = 'name is required';
+  } else if (name.trim().length > 100) {
+    error.message = ' Max 100 alphanumeric characters';
+  } else if (description.trim().length === 0) {
+    error.message = 'description is required';
+  } else if (address.trim().length === 0) {
+    error.message = 'address is required';
+  } else if (!logo) {
+    error.message = 'logo is required';
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };

@@ -5,3 +5,4 @@
 # import *, Query.*, Mutation.*, Subscription.* from "./media.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./category.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./feature.graphql"
+# import *, Query.*, Mutation.*, Subscription.* from "./Publisher.graphql"
