@@ -47,6 +47,11 @@ enum MediaStatus {
   READY
 }
 
+enum BookType {
+  BOOK
+  STORY
+}
+
 enum UserStatus {
   ACTIVE
   INACTIVE

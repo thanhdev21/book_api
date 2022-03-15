@@ -18,7 +18,9 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
   if (filter) {
     if (filter.categories) conditions.categories = { $in: filter.categories };
     if (filter.uploadedBy) conditions.uploadedBy = filter.uploadedBy;
+    if (filter.bookType) conditions.bookType = filter.bookType;
   }
+
   const response = await BookModel.find({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions })
     .populate([
       { path: 'categories', match: { deletedAt: null } },

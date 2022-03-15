@@ -31,6 +31,7 @@ export type Book = {
   __typename?: 'Book';
   _id: Scalars['ID'];
   author: Scalars['String'];
+  bookType: BookType;
   categories?: Maybe<Array<Category>>;
   content: Media;
   coverPhoto?: Maybe<Media>;
@@ -47,9 +48,15 @@ export type Book = {
 };
 
 export type BookFilter = {
+  bookType?: InputMaybe<BookType>;
   categories?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   uploadedBy?: InputMaybe<Scalars['String']>;
 };
+
+export enum BookType {
+  Book = 'BOOK',
+  Story = 'STORY'
+}
 
 export type Books = {
   __typename?: 'Books';
@@ -94,13 +101,14 @@ export type ClientPayload = {
 
 export type CreateBookInput = {
   author: Scalars['String'];
+  bookType: BookType;
   categories?: InputMaybe<Array<Scalars['String']>>;
   content: Scalars['ID'];
   coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  releasedDate?: InputMaybe<Scalars['Date']>;
+  releasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -444,13 +452,14 @@ export { RoleCodes };
 
 export type UpdateBookInput = {
   author: Scalars['String'];
+  bookType: BookType;
   categories?: InputMaybe<Array<Scalars['String']>>;
   content: Scalars['ID'];
   coverPhoto?: InputMaybe<Scalars['ID']>;
   description: Scalars['String'];
   isbn: Scalars['String'];
   price: Scalars['Int'];
-  releasedDate?: InputMaybe<Scalars['Date']>;
+  releasedDate: Scalars['Date'];
   title: Scalars['String'];
 };
 
@@ -591,6 +600,7 @@ export type ResolversTypes = {
   BaseMedia: ResolverTypeWrapper<BaseMedia>;
   Book: ResolverTypeWrapper<Book>;
   BookFilter: BookFilter;
+  BookType: BookType;
   Books: ResolverTypeWrapper<Books>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Categories: ResolverTypeWrapper<Categories>;
@@ -695,6 +705,7 @@ export type BaseMediaResolvers<ContextType = GraphQLContext, ParentType extends 
 export type BookResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   author?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  bookType?: Resolver<ResolversTypes['BookType'], ParentType, ContextType>;
   categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
   coverPhoto?: Resolver<Maybe<ResolversTypes['Media']>, ParentType, ContextType>;

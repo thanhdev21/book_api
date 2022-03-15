@@ -41,7 +41,7 @@ export const validatorLogin = (input: MutationLoginInput) => {
 };
 
 export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => {
-  const { description, title, isbn, price, releasedDate } = input;
+  const { description, title, isbn, price, releasedDate, bookType } = input;
 
   let error: any = {};
   if (title.trim().length === 0) {
@@ -54,6 +54,8 @@ export const validatorCreatBook = (input: CreateBookInput | UpdateBookInput) => 
     error.message = 'isbn is required';
   } else if (isNaN(price)) {
     error.message = 'Price must be a number';
+  } else if (!bookType) {
+    error.message = 'Book type is required';
   } else error = {};
   // else if (!isDate(relasedDate)) {
   //   error.message = 'Relased Date must be a Date';

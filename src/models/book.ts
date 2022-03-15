@@ -1,4 +1,4 @@
-import { Book } from '@graphql/types/generated-graphql-types';
+import { Book, BookType } from '@graphql/types/generated-graphql-types';
 import mongoose, { Mongoose, Model } from 'mongoose';
 
 interface IBook extends mongoose.Document, Book {
@@ -20,6 +20,7 @@ const BookSchema = new mongoose.Schema(
       default: null,
       nullable: true,
     },
+    bookType: { type: mongoose.Schema.Types.String, default: BookType.Book },
     price: { type: Number, required: true },
     releasedDate: { type: mongoose.Schema.Types.Date, required: true },
     relatedBooks: [{ type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Book' }],

@@ -30,6 +30,7 @@ type Book {
   content: Media!
   price: Int
   releasedDate: Date
+  bookType: BookType!
 }
 
 type Books {
@@ -47,6 +48,7 @@ input CreateBookInput {
   price: Int!
   releasedDate: Date!
   content: ID!
+  bookType: BookType!
 }
 
 input UpdateBookInput {
@@ -59,11 +61,13 @@ input UpdateBookInput {
   price: Int!
   releasedDate: Date!
   content: ID!
+  bookType: BookType!
 }
 
 input BookFilter {
   categories: [String]
   uploadedBy: String
+  bookType: BookType
 }
 
 input BookFilter {
