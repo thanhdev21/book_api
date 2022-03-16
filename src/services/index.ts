@@ -1,6 +1,8 @@
 import { Resolvers, RoleCodes } from '@graphql/types/generated-graphql-types';
 import { authMutations } from './auth/mutations';
 import { authQuery } from './auth/queries';
+import { authorMutation } from './author/mutations';
+import { authorQuery } from './author/queries';
 import { bookMutation } from './books/mutations';
 import { bookQueries } from './books/queries';
 import { categoryMutation } from './category/mutations';
@@ -23,6 +25,7 @@ const resolvers: Resolvers = {
     ...categoryMutation,
     ...featureMutation,
     ...publisherMutation,
+    ...authorMutation,
   },
   Query: {
     ...bookQueries,
@@ -32,6 +35,7 @@ const resolvers: Resolvers = {
     ...mediaQuery,
     ...featureQueries,
     ...publisherQuery,
+    ...authorQuery,
   },
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,

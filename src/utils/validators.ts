@@ -1,6 +1,6 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
-import { isDate, isNaN } from 'lodash';
+import { CreateAuthorInput, CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateAuthorInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
   const { email, password, firstName, lastName } = input;
@@ -117,6 +117,23 @@ export const validatorCreatePublisher = (input: CreatePublisherInput | UpdatePub
     error.message = 'address is required';
   } else if (!logo) {
     error.message = 'logo is required';
+  } else error = {};
+
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorCreateAuthor = (input: CreateAuthorInput | UpdateAuthorInput) => {
+  const { name, gender, dateOfBirth } = input;
+
+  let error: any = {};
+  if (name.trim().length === 0) {
+    error.message = 'name is required';
+  } else if (name.trim().length > 100) {
+    error.message = ' Max 100 alphanumeric characters';
+  } else if (gender.trim().length === 0) {
+    error.message = 'address is required';
+  } else if (dateOfBirth.trim().length === 0) {
+    error.message = 'Date of birth is required';
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };

@@ -62,3 +62,9 @@ enum FeatureType {
   LINK
   HOT_BOOK
 }
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}

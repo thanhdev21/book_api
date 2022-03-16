@@ -27,7 +27,7 @@ export const createPublisher: MutationResolvers['createPublisher'] = async (_, {
     throw makeGraphqlError('Publisher is already exist!', ErrorCodes.BadUserInput);
   }
 
-  const newCategory = new PublisherModel({
+  const newPublisher = new PublisherModel({
     name,
     description,
     registedDate,
@@ -35,7 +35,7 @@ export const createPublisher: MutationResolvers['createPublisher'] = async (_, {
     address,
     numberOfWork,
   });
-  await newCategory.save();
+  await newPublisher.save();
 
-  return newCategory;
+  return newPublisher;
 };
