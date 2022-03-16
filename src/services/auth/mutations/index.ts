@@ -8,6 +8,7 @@ import { register } from './register';
 import { resendOtp } from './resendOTP';
 import { resetPassword } from './resetPassword';
 import { verifyEmail } from './verifyEmail';
+import { changePassword } from './changePassword';
 
 export const authMutations: MutationResolvers = {
   register,
@@ -19,4 +20,5 @@ export const authMutations: MutationResolvers = {
   adminLogin,
   forgotPassword,
   resetPassword,
+  changePassword,
 };

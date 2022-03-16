@@ -19,7 +19,7 @@ type Mutation {
 
   register(input: RegisterInput!): Boolean!
 
-  changePassword(data: ChangePasswordInput!): Boolean!
+  changePassword(input: ChangePasswordInput!): Boolean!
 }
 
 type Query {

@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { CreateAuthorInput, CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateAuthorInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { ChangePasswordInput, CreateAuthorInput, CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateAuthorInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 import { isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
@@ -173,5 +173,22 @@ export const validatorFeatureInput = (input: CreateFeatureInput | UpdateFeatureI
   // else if (!isDate(relasedDate)) {
   //   error.message = 'Relased Date must be a Date';
   // }
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorChangePassword = (input: ChangePasswordInput) => {
+  const { oldPassword, newPassword } = input;
+
+  let error: any = {};
+  if (newPassword.trim().length === 0) {
+    error.message = 'new password is required';
+  } else if (newPassword.trim().length < 6) {
+    error.message = 'new password must be at least 6 characters';
+  } else if (oldPassword.trim().length === 0) {
+    error.message = 'Old password is required';
+  } else if (oldPassword.trim().length < 6) {
+    error.message = 'Old password must be at least 6 characters';
+  } else error = {};
+
   return { error, isValid: Object.keys(error).length < 1 };
 };
