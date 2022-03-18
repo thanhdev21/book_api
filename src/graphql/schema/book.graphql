@@ -7,6 +7,7 @@ type Mutation {
   createBook(input: CreateBookInput!): Book!
   updateBook(id: ID!, input: UpdateBookInput!): Book!
   deleteBook(id: ID!): Boolean
+  views(id: ID!): Boolean
 }
 
 type Query {
@@ -31,6 +32,7 @@ type Book {
   price: Int
   releasedDate: Date
   bookType: BookType!
+  views: Int
 }
 
 type Books {

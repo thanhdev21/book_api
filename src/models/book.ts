@@ -24,6 +24,7 @@ const BookSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     releasedDate: { type: mongoose.Schema.Types.Date, required: true },
     relatedBooks: [{ type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Book' }],
+    views: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
