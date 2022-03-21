@@ -7,12 +7,13 @@ type Mutation {
   createBook(input: CreateBookInput!): Book!
   updateBook(id: ID!, input: UpdateBookInput!): Book!
   deleteBook(id: ID!): Boolean
-  views(id: ID!): Boolean
+  views(bookId: ID!): Boolean
 }
 
 type Query {
   getAllBooks(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: BookFilter): Books!
   getBook(id: ID!): Book!
+  getBookByRank(pageIndex: Int = 1, pageSize: Int = 100, search: String, filter: RankFilter): Books!
 }
 
 type Book {
@@ -75,4 +76,16 @@ input BookFilter {
 input BookFilter {
   categories: [String]
   uploadedBy: String
+}
+
+input RankFilter {
+  bookType: BookType
+  period: Period
+}
+
+enum Period {
+  DAY
+  WEEK
+  MONTH
+  ALL
 }

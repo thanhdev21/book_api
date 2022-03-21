@@ -11,6 +11,11 @@ type Paginate {
   totalItems: Int
 }
 
+type View {
+  _id: ID!
+  bookId: ID!
+  viewAt: Date!
+}
 enum Order {
   ASC
   DESC
