@@ -14,7 +14,7 @@ export const getPublisher: QueryResolvers['getPublisher'] = async (_, { id }, co
   }
 
   const publisher = await PublisherModel.findById(id)
-    .populate([{ path: 'avatar', match: { deleteAt: null }, model: 'Media' }])
+    .populate([{ path: 'logo', match: { deleteAt: null }, model: 'Media' }])
     .exec();
 
   if (!publisher) {

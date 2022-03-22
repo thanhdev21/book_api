@@ -16,7 +16,7 @@ export const getAllAuthors: QueryResolvers['getAllAuthors'] = async (_, { pageSi
   conditions.deletedAt = null;
 
   const response = await AuthorModel.find({ $or: [{ name: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }], ...conditions })
-    .populate([{ path: 'logo', match: { deleteAt: null }, model: 'Media' }])
+    .populate([{ path: 'avatar', match: { deleteAt: null }, model: 'Media' }])
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
