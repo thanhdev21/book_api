@@ -14,6 +14,7 @@ type Query {
   getAllBooks(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: BookFilter): Books!
   getBook(id: ID!): Book!
   getBookByRank(pageIndex: Int = 1, pageSize: Int = 100, search: String, filter: RankFilter): Books!
+  getNewBookList(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: BookFilter): Books!
 }
 
 type Book {
@@ -71,11 +72,6 @@ input BookFilter {
   categories: [String]
   uploadedBy: String
   bookType: BookType
-}
-
-input BookFilter {
-  categories: [String]
-  uploadedBy: String
 }
 
 input RankFilter {
