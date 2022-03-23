@@ -42,21 +42,7 @@ export const getAllBooks: QueryResolvers['getAllBooks'] = async (_, { pageIndex,
     .sort({ createdAt: 'desc' })
     .exec();
 
-  const totalItem = await BookModel.count({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions }).populate([
-    { path: 'categories', match: { deletedAt: null } },
-    { path: 'coverPhoto', match: { deleteAt: null } },
-    { path: 'content', match: { deleteAt: null }, model: 'Media' },
-    'uploadedBy',
-    {
-      path: 'relatedBooks',
-      populate: [
-        { path: 'categories', match: { deletedAt: null }, model: 'Category' },
-        { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
-        { path: 'content', match: { deleteAt: null }, model: 'Media' },
-        { path: 'uploadedBy', model: 'User' },
-      ],
-    },
-  ]);
+  const totalItem = await BookModel.count({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions }).lean();
 
   const books: Books = {
     items: response,

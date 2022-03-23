@@ -36,11 +36,11 @@ export const updatePublisher: MutationResolvers['updatePublisher'] = async (_, {
   publisher.logo = logo;
   publisher.numberOfWork = numberOfWork;
   publisher.registedDate = registedDate;
-  await publisher.save((res) =>
+  await publisher.save().then((res) => {
     PublisherModel.findById(res._id)
       .populate([{ path: 'logo', match: { deleteAt: null }, model: 'Media' }])
-      .exec(),
-  );
+      .exec();
+  });
 
   return publisher;
 };

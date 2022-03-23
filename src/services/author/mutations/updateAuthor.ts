@@ -35,7 +35,7 @@ export const updateAuthor: MutationResolvers['updateAuthor'] = async (_, { id, i
   author.dateOfBirth = dateOfBirth;
   author.avatar = avatar;
   author.gender = gender;
-  await author.save((res) =>
+  await author.save().then((res) =>
     AuthorModel.findById(res._id)
       .populate([{ path: 'avatar', match: { deleteAt: null }, model: 'Media' }])
       .exec(),

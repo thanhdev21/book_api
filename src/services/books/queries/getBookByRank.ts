@@ -1,5 +1,4 @@
 import BookModel from '@/models/book';
-import ViewModel from '@/models/view';
 import { Books, Period, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import dayjs from 'dayjs';
 
@@ -26,62 +25,112 @@ export const getBookByRank: QueryResolvers['getBookByRank'] = async (_, { pageIn
     if (filter.period === Period.Month) viewConditions.viewAt = { $gte: dayjs().startOf('month'), $lt: dayjs().endOf('month') };
   }
 
-  const response = await BookModel.find({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions })
-    .lean()
-    .populate([
-      { path: 'categories', match: { deletedAt: null } },
-      { path: 'coverPhoto', match: { deleteAt: null } },
-      { path: 'content', match: { deleteAt: null }, model: 'Media' },
-      'uploadedBy',
-      {
-        path: 'relatedBooks',
-        populate: [
-          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
-          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
-          { path: 'content', match: { deleteAt: null }, model: 'Media' },
-          { path: 'uploadedBy', model: 'User' },
+  const response = await BookModel.aggregate([
+    {
+      $lookup: {
+        from: 'View',
+        localField: '_id',
+        foreignField: 'bookId',
+        as: 'views',
+        pipeline: [
+          {
+            $match: {
+              ...viewConditions,
+            },
+          },
         ],
       },
-    ])
+    },
+    {
+      $lookup: {
+        from: 'Media',
+        localField: 'content',
+        foreignField: '_id',
+        as: 'content',
+        pipeline: [
+          {
+            $match: {
+              deletedAt: null,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: 'Category',
+        localField: 'categories',
+        foreignField: '_id',
+        as: 'categories',
+        pipeline: [
+          {
+            $match: {
+              deletedAt: null,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: 'Media',
+        localField: 'coverPhoto',
+        foreignField: '_id',
+        as: 'coverPhoto',
+        pipeline: [
+          {
+            $match: {
+              deletedAt: null,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: 'User',
+        localField: 'uploadedBy',
+        foreignField: '_id',
+        as: 'uploadedBy',
+      },
+    },
+    {
+      $lookup: {
+        from: 'Book',
+        localField: 'relatedBooks',
+        foreignField: '_id',
+        as: 'relatedBooks',
+        pipeline: [
+          {
+            $match: {
+              deletedAt: null,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: '$content' },
+    { $unwind: '$uploadedBy' },
+    { $unwind: '$coverPhoto' },
+    {
+      $addFields: { views: { $size: '$views' } },
+    },
+    {
+      $match: {
+        $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }],
+        ...conditions,
+      },
+    },
+  ])
+    .sort({ views: 'desc' })
     .limit(100)
     .skip(page)
     .exec();
 
-  const totalItem = await BookModel.count({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions })
-    .lean()
-    .populate([
-      { path: 'categories', match: { deletedAt: null } },
-      { path: 'coverPhoto', match: { deleteAt: null } },
-      { path: 'content', match: { deleteAt: null }, model: 'Media' },
-      'uploadedBy',
-      {
-        path: 'relatedBooks',
-        populate: [
-          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
-          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
-          { path: 'content', match: { deleteAt: null }, model: 'Media' },
-          { path: 'uploadedBy', model: 'User' },
-        ],
-      },
-    ]);
-
-  const result = response.map(async (item) => {
-    const views = await ViewModel.count({ bookId: item._id, ...viewConditions });
-    console.log(views);
-
-    return {
-      ...item,
-      views,
-    };
-  });
+  const totalItem = await BookModel.count({ $or: [{ title: new RegExp(search, 'i') }, { description: new RegExp(search, 'i') }, { author: new RegExp(search, 'i') }], ...conditions }).lean();
 
   const books: Books = {
-    items: await result.sort(async (a, b) => {
-      const a1 = await a;
-      const b1 = await b;
-
-      return b1.views - a1.views > 1;
-    }),
+    items: response,
     paginate: {
       pageSize,
       pageIndex,
