@@ -1,4 +1,4 @@
-import { checkAuth, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified, requiredAuth } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import { MediaModel } from '@/models/media';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
@@ -7,10 +7,9 @@ import { makeGraphqlError } from '@utils/error';
 import { validatorCreatBook } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const createBook: MutationResolvers['createBook'] = async (_, { input }, context) => {
+export const createBook = requiredAuth<MutationResolvers['createBook']>(async (_, { input }, { auth }) => {
   const { title, description, isbn, categories, author, price, releasedDate, content, bookType } = input;
   const { isValid, error } = validatorCreatBook(input);
-  const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -69,4 +68,4 @@ export const createBook: MutationResolvers['createBook'] = async (_, { input }, 
       ])
       .exec(),
   );
-};
+});

@@ -1,25 +1,37 @@
 import './alias-modules';
-import schemaWithResolvers from '@graphql/schema';
-import { ErrorCodes } from '@graphql/types/generated-graphql-types';
+import schema from '@/graphql/schema';
+import { ErrorCodes } from '@/graphql/types/generated-graphql-types';
+import { GraphQLContext } from '@/graphql/types/graphql';
+import AuthMiddleWare, { validateTokenForSubscription } from '@middleware/auth';
 import { makeGraphqlError } from '@utils/error';
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import graphqlUploadExpress from 'graphql-upload/public/graphqlUploadExpress.js';
+import { useServer } from 'graphql-ws/lib/use/ws';
 import { createServer } from 'http';
-import { connect as MongoDbConnect } from '@database/mongodb';
+import ws, { WebSocketServer } from 'ws';
+
 import env from './env';
+import { connect } from '@/database/mongodb';
 
-MongoDbConnect(true).then(() => true);
+connect(true).then(() => true);
 
-const PORT = env.port ? env.port : 32001;
+const PORT = env.port ? parseInt(env.port) : 32001;
 
 /**
  *
  * @param auth need to build graphql context
  */
+
+const buildGraphqlContext = (auth: GraphQLContext['auth'], socketId: string = null) => {
+  return {
+    auth,
+    socketId,
+  };
+};
 
 const app = express();
 app.use(cors());
@@ -29,13 +41,52 @@ app.use(bodyParser.json());
 app.get('/', (_: express.Request, res: express.Response) => {
   return res.send('Hello book-shop Server!');
 });
+app.use(AuthMiddleWare.process);
 
+// app.get('/graphql', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../graphiql-over-ws.html'));
+// });
 /**
  * create graphql server
  */
+// apply app to apollo middleware
+const httpServer = createServer(app);
+
+const wsServer = new ws.Server({
+  server: httpServer,
+  path: '/graphql',
+});
+
+const serverCleanup = useServer(
+  {
+    schema,
+    onConnect: async ({ connectionParams }: any) => {
+      console.log('connected');
+
+      try {
+        if (connectionParams.authorization) {
+          const auth = await validateTokenForSubscription(connectionParams.authorization);
+          return buildGraphqlContext(auth as any);
+        }
+        throw makeGraphqlError('Missing auth id token!', ErrorCodes.Unauthenticated);
+      } catch (error: any) {
+        console.log('error', error);
+
+        throw makeGraphqlError('Missing auth id token!', ErrorCodes.Unauthenticated);
+      }
+    },
+    onDisconnect: async (webSocket, _context) => {
+      console.log('Disconnected!');
+    },
+  },
+  wsServer,
+);
 
 const server = new ApolloServer({
-  context: ({ req }) => ({ req }),
+  context: ({ req, connection }: { req: express.Request & { auth: any }; connection: any }) => {
+    if (connection) return connection.context;
+    return buildGraphqlContext(req.auth);
+  },
   formatError: (err) => {
     if (err && err.extensions && err.extensions.exception.code === 'ValidationError') {
       return makeGraphqlError(err.message, ErrorCodes.GraphqlValidationFailed);
@@ -43,27 +94,23 @@ const server = new ApolloServer({
     return err;
   },
 
-  schema: schemaWithResolvers,
-  // subscriptions: {
-  // onConnect: async (connectionParam: any, webSocket, context) => {
-  //   try {
-  //     const { authorization } = connectionParam;
-  //     if (authorization) {
-  //       // const auth = await subscriptionsAuthentication(authorization);
-  //       // return graphqlContext(auth);
-  //     }
-  //     throw makeGraphqlError('Missing authorization token', ErrorCodes.Unauthenticated);
-  //   } catch (err) {
-  //     throw new AuthenticationError(err);
-  //   }
-  // },
-  // },
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  schema,
+
+  plugins: [
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+    },
+    ApolloServerPluginLandingPageGraphQLPlayground(),
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+  ],
   introspection: true,
 });
-
-// apply app to apollo middleware
-const httpServer = createServer(app);
 
 /**
  * func to start server

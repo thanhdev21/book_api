@@ -170,3 +170,21 @@ export const buildJWTResponse = async (user: User): Promise<Jwt> => {
     refreshTokenExpiresAt: token.refreshTokenExpiresAt,
   };
 };
+
+export const verifyBearerToken = (token: string): Promise<JWTAuthTokenPayload> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecretKey, { algorithms: ['HS256'] }, (err: any, payload: any) => {
+      if (err) return reject(err);
+      return resolve(payload);
+    });
+  });
+};
+
+export const verifyBaseBearerToken = (token: string): Promise<JWTAuthTokenPayload> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, jwtSecretKey, { algorithms: ['HS256'] }, (err: any, payload: any) => {
+      if (err) return reject(err);
+      return resolve(payload);
+    });
+  });
+};

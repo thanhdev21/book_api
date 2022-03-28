@@ -1,11 +1,9 @@
-import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified, requiredAuth } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getCategory: QueryResolvers['getCategory'] = async (_, { id }, context) => {
-  const auth = await checkAuth(context);
-
+export const getCategory = requiredAuth<QueryResolvers['getCategory']>(async (_, { id }, { auth }) => {
   const isVerified = await checkVerified(auth.userId);
 
   if (!isVerified) {
@@ -19,4 +17,4 @@ export const getCategory: QueryResolvers['getCategory'] = async (_, { id }, cont
   }
 
   return category;
-};
+});

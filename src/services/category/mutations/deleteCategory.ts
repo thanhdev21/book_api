@@ -1,12 +1,10 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const deleteCategory: MutationResolvers['deleteCategory'] = async (_, { id }, context) => {
-  const auth: JwtPayload = await checkAuth(context);
-
+export const deleteCategory = requiredAuth<MutationResolvers['deleteCategory']>(async (_, { id }, { auth }) => {
   const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
 
   if (!hasPermission) {
@@ -23,4 +21,4 @@ export const deleteCategory: MutationResolvers['deleteCategory'] = async (_, { i
   await category.save();
 
   return true;
-};
+});

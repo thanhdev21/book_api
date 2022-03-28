@@ -1,11 +1,9 @@
-import { checkAuth, checkIsAdmin } from '@/middleware/auth';
+import { checkAuth, checkIsAdmin, requiredAuth } from '@/middleware/auth';
 import UserModel from '@/models/user';
 import { ErrorCodes, QueryResolvers, Users } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getAllUsers: QueryResolvers['getAllUsers'] = async (_, { pageIndex, pageSize, filter, search }, context) => {
-  const auth = await checkAuth(context);
-
+export const getAllUsers = requiredAuth<QueryResolvers['getAllUsers']>(async (_, { pageIndex, pageSize, filter, search }, { auth }) => {
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
 
@@ -38,4 +36,4 @@ export const getAllUsers: QueryResolvers['getAllUsers'] = async (_, { pageIndex,
   };
 
   return users;
-};
+});

@@ -29,6 +29,8 @@
       "@utils/*": ["src/utils/*"],
       "@middleware/*": ["src/middleware/*"],
       "@workers/*": ["src/workers/*"],
+      "@pubsubs/*": ["src/pubsubs/*"],
+      "@resolvers/*": ["src/resolvers/*"],
       "@/*": ["src/*"]
     },
 
@@ -36,6 +38,6 @@
     "noImplicitReturns": true,
     "noUnusedLocals": false
   },
-  "include": ["src","test.ts"],
+  "include": ["src", "test.ts"],
   "exclude": ["dist", "src/__test__/"]
 }

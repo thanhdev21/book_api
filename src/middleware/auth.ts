@@ -1,11 +1,12 @@
 import UserModel from '@/models/user';
 import UserTokenModel from '@/models/userToken';
-import { ErrorCodes, RoleCodes } from '@graphql/types/generated-graphql-types';
+import { ErrorCodes, RoleCodes, User } from '@graphql/types/generated-graphql-types';
 import { GraphQLContext } from '@graphql/types/graphql';
 import { makeGraphqlError } from '@utils/error';
-import { verifyToken } from '@utils/jwt';
+import { JWTAuthTokenType, verifyBaseBearerToken, verifyBearerToken, verifyToken } from '@utils/jwt';
 import { AuthenticationError } from 'apollo-server-express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import express from 'express';
 
 export function requiredAuth<T>(next: T) {
   return (obj: any, args: any, context: GraphQLContext, info: any) => {
@@ -58,4 +59,53 @@ export const checkPermissionAdminAndContentCreator = async (userId) => {
   const user = await UserModel.findById(userId);
   if (user.role === RoleCodes.USER) return false;
   return true;
+};
+
+export default {
+  async process(
+    req: express.Request & {
+      auth?: { userId: string; user: User };
+    },
+    res: express.Response,
+    next: express.NextFunction,
+  ) {
+    try {
+      const xToken: string = req.headers['x-access-token'] as string;
+      if (xToken && xToken.replace('Bearer ', '')) {
+        return next();
+      } else if (!req.headers.authorization || !req.headers.authorization.replace('Bearer ', '')) {
+        return next();
+      } else {
+        const decodedToken = await verifyBearerToken(req.headers.authorization.replace('Bearer ', ''));
+        if (decodedToken.type === JWTAuthTokenType.ID_TOKEN && decodedToken?.userId) {
+          const user: User = await UserModel.findById(decodedToken.userId).lean().exec();
+          if (user) {
+            req.auth = {
+              userId: user._id.toString(),
+              user,
+            };
+          }
+        }
+        return next();
+      }
+    } catch (e) {
+      return next();
+    }
+  },
+};
+
+export const validateTokenForSubscription = async (idToken: string) => {
+  const decodedToken = await verifyBearerToken(idToken.replace('Bearer ', ''));
+
+  if (decodedToken.type === JWTAuthTokenType.ID_TOKEN && decodedToken && decodedToken.userId) {
+    const user = await UserModel.findById(decodedToken.userId).lean().exec();
+    if (user) {
+      return {
+        uid: user._id.toString(),
+        user,
+      };
+    }
+    return null;
+  }
+  throw new AuthenticationError('Decoded token failed!');
 };

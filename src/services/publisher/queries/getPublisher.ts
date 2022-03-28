@@ -1,12 +1,10 @@
-import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, checkVerified, requiredAuth } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import PublisherModel from '@/models/publisher';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getPublisher: QueryResolvers['getPublisher'] = async (_, { id }, context) => {
-  const auth = await checkAuth(context);
-
+export const getPublisher = requiredAuth<QueryResolvers['getPublisher']>(async (_, { id }, { auth }) => {
   const isVerified = await checkVerified(auth.userId);
 
   if (!isVerified) {
@@ -22,4 +20,4 @@ export const getPublisher: QueryResolvers['getPublisher'] = async (_, { id }, co
   }
 
   return publisher;
-};
+});

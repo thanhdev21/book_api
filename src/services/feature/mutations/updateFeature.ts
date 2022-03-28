@@ -1,14 +1,13 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import FeatureModel from '@/models/feature';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { validatorFeatureInput } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const updateFeature: MutationResolvers['updateFeature'] = async (_, { id, input }, context) => {
+export const updateFeature = requiredAuth<MutationResolvers['updateFeature']>(async (_, { id, input }, { auth }) => {
   const { title, coverPhoto, description, books, type, link } = input;
   const { isValid, error } = validatorFeatureInput(input);
-  const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -35,4 +34,4 @@ export const updateFeature: MutationResolvers['updateFeature'] = async (_, { id,
   await feature.save().then((res) => FeatureModel.findById(res._id).populate(['coverPhoto', 'books']).exec());
 
   return feature;
-};
+});

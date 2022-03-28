@@ -2,6 +2,7 @@ import UserModel from '@/models/user';
 import { IAuth } from '@/types';
 
 import { RoleCodes } from '@constants/enum';
+import { PubSub } from 'graphql-subscriptions';
 import { Media, User } from './generated-graphql-types';
 
 export interface GraphQLContext {

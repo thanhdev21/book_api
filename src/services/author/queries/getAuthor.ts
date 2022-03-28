@@ -1,11 +1,9 @@
-import { checkAuth, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified, requiredAuth } from '@/middleware/auth';
 import AuthorModel from '@/models/author';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getAuthor: QueryResolvers['getAuthor'] = async (_, { id }, context) => {
-  const auth = await checkAuth(context);
-
+export const getAuthor = requiredAuth<QueryResolvers['getAuthor']>(async (_, { id }, { auth }) => {
   const isVerified = await checkVerified(auth.userId);
 
   if (!isVerified) {
@@ -21,4 +19,4 @@ export const getAuthor: QueryResolvers['getAuthor'] = async (_, { id }, context)
   }
 
   return author;
-};
+});

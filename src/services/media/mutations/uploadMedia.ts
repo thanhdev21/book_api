@@ -1,5 +1,5 @@
 import env from '@/env';
-import { checkAuth } from '@/middleware/auth';
+import { checkAuth, requiredAuth } from '@/middleware/auth';
 import { MediaModel } from '@/models/media';
 import { createMedia } from '@business/media';
 import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
@@ -8,14 +8,12 @@ import { genFirebaseStorageFolderName, uploadFile } from '@utils/firebase-storag
 import { allowedPdfType, allowedPhotoType, allowedVideoType, genMediaType } from '@utils/helpers';
 import { makeSlug, streamToBuffer } from '@utils/upload';
 
-export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file }, context) => {
+export const uploadMedia = requiredAuth<MutationResolvers['uploadMedia']>(async (_, { file }, { auth }) => {
   const {
     file: { createReadStream, filename: _filename, mimetype },
   } = await file;
-  const auth = await checkAuth(context);
-  const stream = createReadStream();
 
-  console.log('mimetype', mimetype);
+  const stream = createReadStream();
 
   let uploadType: 'VIDEO' | 'IMAGE' | 'PDF' | null = null;
 
@@ -56,4 +54,4 @@ export const uploadMedia: MutationResolvers['uploadMedia'] = async (_, { file },
   const media = await createMedia(createData).then((res) => MediaModel.findById(res._id).populate('createdBy').exec());
 
   return media;
-};
+});

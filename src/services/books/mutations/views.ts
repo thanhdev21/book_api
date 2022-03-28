@@ -1,16 +1,19 @@
 import { checkAuth } from '@/middleware/auth';
 import ViewModel from '@/models/view';
 import { MutationResolvers } from '@graphql/types/generated-graphql-types';
+import { requiredAuth } from '@middleware/auth';
 
-export const views: MutationResolvers['views'] = async (_, { bookId }, context) => {
-  await checkAuth(context);
+import { ViewCreatedPubsub } from '@/pubsubs/view';
+import BookModel from '@/models/book';
 
+export const views = requiredAuth<MutationResolvers['views']>(async (_, { bookId }, { auth }) => {
   const newView = new ViewModel({
     bookId,
     viewAt: new Date(),
   });
 
   await newView.save();
-
+  const book = await BookModel.findById(bookId);
+  ViewCreatedPubsub.publish(book);
   return true;
-};
+});

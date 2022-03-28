@@ -1,4 +1,4 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import AuthorModel from '@/models/author';
 import CategoryModel from '@/models/category';
 
@@ -6,9 +6,7 @@ import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-
 import { makeGraphqlError } from '@utils/error';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const deleteAuthor: MutationResolvers['deleteAuthor'] = async (_, { id }, context) => {
-  const auth: JwtPayload = await checkAuth(context);
-
+export const deleteAuthor = requiredAuth<MutationResolvers['deleteAuthor']>(async (_, { id }, { auth }) => {
   const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
 
   if (!hasPermission) {
@@ -25,4 +23,4 @@ export const deleteAuthor: MutationResolvers['deleteAuthor'] = async (_, { id },
   await author.save();
 
   return true;
-};
+});

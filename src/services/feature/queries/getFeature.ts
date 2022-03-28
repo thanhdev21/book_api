@@ -1,10 +1,10 @@
-import { checkAuth, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified, requiredAuth } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import FeatureModel from '@/models/feature';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getFeature: QueryResolvers['getFeature'] = async (_, { id }, context) => {
+export const getFeature = requiredAuth<QueryResolvers['getFeature']>(async (_, { id }, context) => {
   const feature = await FeatureModel.findById(id)
     .populate([
       {
@@ -26,4 +26,4 @@ export const getFeature: QueryResolvers['getFeature'] = async (_, { id }, contex
   }
 
   return feature;
-};
+});

@@ -1,12 +1,10 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import FeatureModel from '@/models/feature';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const deleteFeature: MutationResolvers['deleteFeature'] = async (_, { id }, context) => {
-  const auth: JwtPayload = await checkAuth(context);
-
+export const deleteFeature = requiredAuth<MutationResolvers['deleteFeature']>(async (_, { id }, { auth }) => {
   const hasPermission = await checkPermissionAdminAndContentCreator(auth.userId);
 
   if (!hasPermission) {
@@ -24,4 +22,4 @@ export const deleteFeature: MutationResolvers['deleteFeature'] = async (_, { id 
   await feature.save();
 
   return true;
-};
+});

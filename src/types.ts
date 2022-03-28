@@ -7,7 +7,7 @@ export enum RegisterTokenType {
 }
 
 export interface IAuth {
-  uid: number;
+  userId: string;
   ipAddress?: string | string[];
-  // user: User;
+  user: User;
 }

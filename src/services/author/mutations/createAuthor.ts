@@ -1,4 +1,4 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import AuthorModel from '@/models/author';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
@@ -6,10 +6,9 @@ import { makeGraphqlError } from '@utils/error';
 import { validatorCreateAuthor } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const createAuthor: MutationResolvers['createAuthor'] = async (_, { input }, context) => {
+export const createAuthor = requiredAuth<MutationResolvers['createAuthor']>(async (_, { input }, { auth }) => {
   const { name, description, avatar, gender, dateOfBirth } = input;
   const { isValid, error } = validatorCreateAuthor(input);
-  const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -37,4 +36,4 @@ export const createAuthor: MutationResolvers['createAuthor'] = async (_, { input
   await newAuthor.save();
 
   return newAuthor;
-};
+});

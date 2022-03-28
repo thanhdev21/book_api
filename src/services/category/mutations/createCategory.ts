@@ -1,14 +1,13 @@
-import { checkAuth, checkPermissionAdminAndContentCreator } from '@/middleware/auth';
+import { checkAuth, checkPermissionAdminAndContentCreator, requiredAuth } from '@/middleware/auth';
 import CategoryModel from '@/models/category';
 import { ErrorCodes, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 import { validatorCreateCategory } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const createCategory: MutationResolvers['createCategory'] = async (_, { input }, context) => {
+export const createCategory = requiredAuth<MutationResolvers['createCategory']>(async (_, { input }, { auth }) => {
   const { name, description } = input;
   const { isValid, error } = validatorCreateCategory(input);
-  const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -33,4 +32,4 @@ export const createCategory: MutationResolvers['createCategory'] = async (_, { i
   await newCategory.save();
 
   return newCategory;
-};
+});

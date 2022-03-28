@@ -16,6 +16,8 @@ export const modules = {
   '@utils': 'utils',
   '@middleware': 'middleware',
   '@events': 'events',
+  '@pubsubs': 'pubsubs',
+  '@resolvers': 'resolvers',
   '@dist': 'dist',
   '@workers': 'workers',
 };

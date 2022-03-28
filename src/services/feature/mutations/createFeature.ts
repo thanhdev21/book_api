@@ -1,4 +1,4 @@
-import { checkAuth, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified, requiredAuth } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import FeatureModel from '@/models/feature';
 import { MediaModel } from '@/models/media';
@@ -8,10 +8,9 @@ import { makeGraphqlError } from '@utils/error';
 import { validatorFeatureInput } from '@utils/validators';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const createFeature: MutationResolvers['createFeature'] = async (_, { input }, context) => {
+export const createFeature = requiredAuth<MutationResolvers['createFeature']>(async (_, { input }, { auth }) => {
   const { title, description, coverPhoto, link, type, books } = input;
   const { isValid, error } = validatorFeatureInput(input);
-  const auth: JwtPayload = await checkAuth(context);
 
   if (!isValid) {
     throw makeGraphqlError(error.message, ErrorCodes.BadUserInput);
@@ -36,4 +35,4 @@ export const createFeature: MutationResolvers['createFeature'] = async (_, { inp
   });
 
   return await newFeature.save().then((res) => FeatureModel.findById(res._id).populate(['coverPhoto', 'books']).exec());
-};
+});

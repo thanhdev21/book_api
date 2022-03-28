@@ -1,17 +1,9 @@
-import { checkAuth, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkVerified, requiredAuth } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => {
-  // const auth = await checkAuth(context);
-
-  // const isVerified = await checkVerified(auth.userId);
-
-  // if (!isVerified) {
-  //   throw makeGraphqlError('User is not verified', ErrorCodes.Forbidden);
-  // }
-
+export const getBook = requiredAuth<QueryResolvers['getBook']>(async (_, { id }, context) => {
   const book = await BookModel.findById(id)
     .populate([
       { path: 'categories', match: { deletedAt: null } },
@@ -35,4 +27,4 @@ export const getBook: QueryResolvers['getBook'] = async (_, { id }, context) => 
   }
 
   return book;
-};
+});

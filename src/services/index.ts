@@ -5,6 +5,7 @@ import { authorMutation } from './author/mutations';
 import { authorQuery } from './author/queries';
 import { bookMutation } from './books/mutations';
 import { bookQueries } from './books/queries';
+import { bookSubcriptions } from './books/subcripstions';
 import { categoryMutation } from './category/mutations';
 import { categoryQuery } from './category/queries';
 import { featureMutation } from './feature/mutations';
@@ -15,7 +16,10 @@ import { publisherMutation } from './publisher/mutations';
 import { publisherQuery } from './publisher/queries';
 import { userMutations } from './user/mutations';
 import { userQueries } from './user/queries';
-
+import { Comment } from '@resolvers/comment';
+import { commentQueries } from './comments/queries';
+import { commentMutations } from './comments/mutations';
+import { commentSubscriptions } from './comments/subscriptions';
 const resolvers: Resolvers = {
   Mutation: {
     ...authMutations,
@@ -26,6 +30,7 @@ const resolvers: Resolvers = {
     ...featureMutation,
     ...publisherMutation,
     ...authorMutation,
+    ...commentMutations,
   },
   Query: {
     ...bookQueries,
@@ -36,7 +41,13 @@ const resolvers: Resolvers = {
     ...featureQueries,
     ...publisherQuery,
     ...authorQuery,
+    ...commentQueries,
   },
+  Subscription: {
+    ...bookSubcriptions,
+    ...commentSubscriptions,
+  },
+  Comment,
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,
     CONTENT_CREATOR: RoleCodes.CONTENT_CREATOR,

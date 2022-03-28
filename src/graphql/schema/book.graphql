@@ -17,6 +17,12 @@ type Query {
   getNewBookList(pageIndex: Int = 1, pageSize: Int = 20, search: String, filter: BookFilter): Books!
 }
 
+type Subscription {
+  hello: String
+  onCommented(bookId: ID!): Boolean
+  onViewed(bookId: ID!): Book!
+}
+
 type Book {
   _id: ID!
   title: String!

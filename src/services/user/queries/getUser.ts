@@ -1,12 +1,10 @@
-import { checkAuth, checkIsAdmin, checkVerified } from '@/middleware/auth';
+import { checkAuth, checkIsAdmin, checkVerified, requiredAuth } from '@/middleware/auth';
 import BookModel from '@/models/book';
 import UserModel from '@/models/user';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getUser: QueryResolvers['getUser'] = async (_, { id }, context) => {
-  const auth = await checkAuth(context);
-
+export const getUser = requiredAuth<QueryResolvers['getUser']>(async (_, { id }, { auth }) => {
   const isAdmin = await checkIsAdmin(auth.userId);
 
   if (!isAdmin) {
@@ -20,4 +18,4 @@ export const getUser: QueryResolvers['getUser'] = async (_, { id }, context) => 
   }
 
   return user;
-};
+});

@@ -7,3 +7,4 @@
 # import *, Query.*, Mutation.*, Subscription.* from "./feature.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./publisher.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./author.graphql"
+# import *, Query.*, Mutation.*, Subscription.* from "./comment.graphql"
