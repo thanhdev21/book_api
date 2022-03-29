@@ -20,9 +20,11 @@ export const getBookByRank: QueryResolvers['getBookByRank'] = async (_, { pageIn
   conditions.deletedAt = null;
   if (filter) {
     if (filter.bookType) conditions.bookType = filter.bookType;
-    if (filter.period === Period.Day) viewConditions.viewAt = { $gte: dayjs().startOf('day'), $lt: dayjs().endOf('day') };
-    if (filter.period === Period.Week) viewConditions.viewAt = { $gte: dayjs().startOf('week'), $lt: dayjs().endOf('week') };
-    if (filter.period === Period.Month) viewConditions.viewAt = { $gte: dayjs().startOf('month'), $lt: dayjs().endOf('month') };
+    console.log('DAY', new Date(dayjs().startOf('day').unix() * 1000), new Date(dayjs().endOf('day').unix() * 1000));
+
+    if (filter.period === Period.Day) viewConditions.viewAt = { $gte: new Date(dayjs().startOf('day').unix() * 1000), $lt: new Date(dayjs().endOf('day').unix() * 1000) };
+    if (filter.period === Period.Week) viewConditions.viewAt = { $gte: new Date(dayjs().startOf('week').unix() * 1000), $lt: new Date(dayjs().endOf('week').unix() * 1000) };
+    if (filter.period === Period.Month) viewConditions.viewAt = { $gte: new Date(dayjs().startOf('month').unix() * 1000), $lt: new Date(dayjs().endOf('month').unix() * 1000) };
   }
 
   const response = await BookModel.aggregate([
