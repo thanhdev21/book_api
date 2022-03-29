@@ -13,6 +13,6 @@ const ViewSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const ViewModel: any = mongoose.models['View'] || mongoose.model('View', ViewSchema, 'View');
+const ViewModel = mongoose.models['View'] || mongoose.model('View', ViewSchema, 'View');
 
 export default ViewModel;
