@@ -101,7 +101,7 @@ export const validateTokenForSubscription = async (idToken: string) => {
     const user = await UserModel.findById(decodedToken.userId).lean().exec();
     if (user) {
       return {
-        uid: user._id.toString(),
+        userId: user._id.toString(),
         user,
       };
     }

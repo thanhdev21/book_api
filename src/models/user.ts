@@ -1,9 +1,10 @@
 import { User, UserStatus } from '@graphql/types/generated-graphql-types';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 interface IUser extends mongoose.Document, User {
   _id: string;
 }
+const ObjectId = Schema.Types.ObjectId;
 
 const UserSchema = new mongoose.Schema(
   {
@@ -19,6 +20,10 @@ const UserSchema = new mongoose.Schema(
     role: { type: Number, required: true },
     resetPasswordToken: { type: String, required: false, nullable: true },
     resetPasswordTokenExpiredAt: { type: Number, required: false, nullable: true },
+    unreadSystemNoticeIds: [ObjectId],
+    unsubscribeNotificationTypes: [String],
+    subscribedFirebaseTokens: [String],
+    socketIds: [String],
     deletedAt: {
       type: Date,
       default: null,

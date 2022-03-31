@@ -7,7 +7,7 @@ import { makeGraphqlError } from '@utils/error';
 export const deleteComment = requiredAuth<MutationResolvers['deleteComment']>(async (_, { _id }, { auth }) => {
   const comment = await CommentModel.findById(_id);
 
-  if (comment.createdBy !== auth.userId || auth.role !== RoleCodes.ADMIN) {
+  if (comment.createdBy !== auth.userId || auth.user.role !== RoleCodes.ADMIN) {
     throw makeGraphqlError('Only can delete your own comments or you a Admin ', ErrorCodes.Forbidden);
   }
 

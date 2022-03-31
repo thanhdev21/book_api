@@ -12,6 +12,12 @@ export const randomNumber = (length: number) => {
   return Number(text);
 };
 
+export async function asyncForEach(array: Array<any>, callback: any) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
+
 export const allowedVideoType = (mimeType: string) => {
   return ['video/mp4', 'video/webm', 'video/ogg'].indexOf(mimeType.toLowerCase()) !== -1;
 };

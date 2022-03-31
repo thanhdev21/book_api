@@ -37,6 +37,7 @@ enum ErrorCodes {
   OTP_EXPIRE
   TOKEN_EXPIRE
   ACCOUNT_HAS_BEEN_INTACTIVE
+  NOT_FOUND
 }
 
 enum MediaType {

@@ -65,8 +65,8 @@ const serverCleanup = useServer(
 
       try {
         if (connectionParams.authorization) {
-          const auth = await validateTokenForSubscription(connectionParams.authorization);
-          return buildGraphqlContext(auth as any);
+          const auth: any = await validateTokenForSubscription(connectionParams.authorization);
+          return buildGraphqlContext(auth);
         }
         throw makeGraphqlError('Missing auth id token!', ErrorCodes.Unauthenticated);
       } catch (error: any) {

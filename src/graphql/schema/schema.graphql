@@ -10,3 +10,4 @@
 # import *, Query.*, Mutation.*, Subscription.* from "./comment.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./favouriteBook.graphql"
 # import *, Query.*, Mutation.*, Subscription.* from "./author.graphql"
+# import *, Query.*, Mutation.*, Subscription.* from "./notification.graphql"
