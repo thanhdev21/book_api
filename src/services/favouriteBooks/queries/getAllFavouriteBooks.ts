@@ -1,9 +1,8 @@
-import { checkAuth } from '@/middleware/auth';
+import { checkAuth, requiredAuth } from '@/middleware/auth';
 import FavouriteBookModel from '@/models/favouriteBook';
 import { QueryResolvers, FavouriteBooks } from '@graphql/types/generated-graphql-types';
 
-export const getAllFavouriteBooks: QueryResolvers['getAllFavouriteBooks'] = async (_, { pageIndex, pageSize }, context) => {
-  const auth = await checkAuth(context);
+export const getAllFavouriteBooks = requiredAuth<QueryResolvers['getAllFavouriteBooks']>(async (_, { pageIndex, pageSize }, { auth }) => {
   const limit = pageSize;
   const page = (pageIndex - 1) * pageSize;
   const response = await FavouriteBookModel.find({ favouriteBy: auth.userId })
@@ -24,4 +23,4 @@ export const getAllFavouriteBooks: QueryResolvers['getAllFavouriteBooks'] = asyn
   };
 
   return FavouriteBook;
-};
+});
