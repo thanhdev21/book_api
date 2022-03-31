@@ -17,12 +17,16 @@ import { publisherQuery } from './publisher/queries';
 import { userMutations } from './user/mutations';
 import { userQueries } from './user/queries';
 import { Comment } from '@resolvers/comment';
+import { Notification } from '@resolvers/notification';
 import { commentQueries } from './comments/queries';
 import { commentMutations } from './comments/mutations';
 import { commentSubscriptions } from './comments/subscriptions';
 import { favouriteListMutation } from './favouriteBooks/mutations';
 import { favouriteBooksQueries } from './favouriteBooks/queries';
 
+import { notificationSubscriptions } from './notifications/subscriptions';
+import { notificationQueries } from './notifications/queries';
+import { notificationMutations } from './notifications/mutations';
 const resolvers: Resolvers = {
   Mutation: {
     ...authMutations,
@@ -35,6 +39,7 @@ const resolvers: Resolvers = {
     ...authorMutation,
     ...commentMutations,
     ...favouriteListMutation,
+    ...notificationMutations,
   },
   Query: {
     ...bookQueries,
@@ -47,12 +52,15 @@ const resolvers: Resolvers = {
     ...authorQuery,
     ...commentQueries,
     ...favouriteBooksQueries,
+    ...notificationQueries,
   },
   Subscription: {
     ...bookSubcriptions,
     ...commentSubscriptions,
+    ...notificationSubscriptions,
   },
   Comment,
+  Notification,
   RoleCodes: {
     ADMIN: RoleCodes.ADMIN,
     CONTENT_CREATOR: RoleCodes.CONTENT_CREATOR,

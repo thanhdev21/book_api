@@ -3,7 +3,7 @@ import BookModel from '@/models/book';
 import { ErrorCodes, QueryResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
 
-export const getBook = requiredAuth<QueryResolvers['getBook']>(async (_, { id }, context) => {
+export const getBook = <QueryResolvers['getBook']>(async (_, { id }, context) => {
   const book = await BookModel.findById(id)
     .populate([
       { path: 'categories', match: { deletedAt: null } },

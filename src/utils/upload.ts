@@ -2,6 +2,7 @@ import StreamToBuffer from 'stream-to-buffer';
 import ImageMin from 'imagemin';
 import MozJpeg from 'imagemin-mozjpeg';
 import ffmpeg from 'fluent-ffmpeg';
+import { admin } from './firebase';
 
 export function arrayBufferToBufferCycle(ab: any) {
   let buffer = new Buffer(ab.length);
@@ -74,4 +75,41 @@ export const makeSlug = (title?: string) => {
   str = str.replace(/-+$/g, '');
 
   return str;
+};
+
+const storageRef = admin.storage().bucket(`gs://book-backend-traning.appspot.com/`);
+
+export const uploadFile = async (buffer, filename, folder) => {
+  // Upload the File
+
+  const file = storageRef.file(`${folder}/${new Date().getMilliseconds + filename}`);
+  return file
+    .save(buffer)
+    .then((stuff) => {
+      return file.getSignedUrl({
+        action: 'read',
+        expires: '12-31-3000',
+      });
+    })
+    .then((urls) => {
+      const url = urls[0];
+      console.log(`Image url = ${url}`);
+      return url;
+    })
+    .catch((err) => {
+      console.log(`Unable to upload image ${err}`);
+    });
+};
+
+export const genFirebaseStorageFolderName = (name) => {
+  switch (name) {
+    case 'IMAGE':
+      return 'image';
+    case 'VIDEO':
+      return 'video';
+    case 'PDF':
+      return 'pdf';
+    default:
+      return 'image';
+  }
 };
