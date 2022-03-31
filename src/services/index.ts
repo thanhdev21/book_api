@@ -20,6 +20,9 @@ import { Comment } from '@resolvers/comment';
 import { commentQueries } from './comments/queries';
 import { commentMutations } from './comments/mutations';
 import { commentSubscriptions } from './comments/subscriptions';
+import { favouriteListMutation } from './favouriteBooks/mutations';
+import { favouriteBooksQueries } from './favouriteBooks/queries';
+
 const resolvers: Resolvers = {
   Mutation: {
     ...authMutations,
@@ -31,6 +34,7 @@ const resolvers: Resolvers = {
     ...publisherMutation,
     ...authorMutation,
     ...commentMutations,
+    ...favouriteListMutation,
   },
   Query: {
     ...bookQueries,
@@ -42,6 +46,7 @@ const resolvers: Resolvers = {
     ...publisherQuery,
     ...authorQuery,
     ...commentQueries,
+    ...favouriteBooksQueries,
   },
   Subscription: {
     ...bookSubcriptions,
