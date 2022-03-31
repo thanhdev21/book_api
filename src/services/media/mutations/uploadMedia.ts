@@ -4,9 +4,9 @@ import { MediaModel } from '@/models/media';
 import { createMedia } from '@business/media';
 import { ErrorCodes, MediaStatus, MediaType, MutationResolvers } from '@graphql/types/generated-graphql-types';
 import { makeGraphqlError } from '@utils/error';
-import { genFirebaseStorageFolderName, uploadFile } from '@utils/firebase-storage';
+
 import { allowedPdfType, allowedPhotoType, allowedVideoType, genMediaType } from '@utils/helpers';
-import { makeSlug, streamToBuffer } from '@utils/upload';
+import { genFirebaseStorageFolderName, makeSlug, streamToBuffer, uploadFile } from '@utils/upload';
 
 export const uploadMedia = requiredAuth<MutationResolvers['uploadMedia']>(async (_, { file }, { auth }) => {
   const {

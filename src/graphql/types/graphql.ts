@@ -3,7 +3,7 @@ import { IAuth } from '@/types';
 
 import { RoleCodes } from '@constants/enum';
 import { PubSub } from 'graphql-subscriptions';
-import { Media, User } from './generated-graphql-types';
+import { Media, User, Comment, Book } from './generated-graphql-types';
 
 export interface GraphQLContext {
   auth: GraphqlContextAuth;
@@ -22,6 +22,8 @@ export interface GraphqlContextAuth extends IAuth {
 export interface ContextLoaders {
   users: Loader<User>;
   photos: Loader<Media>;
+  comments: Loader<Comment>;
+  books: Loader<Book>;
 }
 
 export interface Loader<T> {

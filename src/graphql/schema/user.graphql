@@ -1,5 +1,5 @@
 # import * from "./base.graphql"
-
+# import * from "./notification.graphql"
 type Mutation {
   updateUserStatus(id: ID!, input: UpdateUserStatusInput!): User!
 }
@@ -22,6 +22,14 @@ type User {
   deletedAt: Date
   createdAt: Date
   updatedAt: Date
+  subscribedFirebaseTokens: [String!]
+  """
+  Notification
+  """
+  totalReadNotifications: Int
+  unreadSystemNoticeIds: [ID!]
+  haveNewMessage: Boolean
+  unsubscribeNotificationTypes: [NotificationType!]
 }
 type Users {
   items: [User!]!
