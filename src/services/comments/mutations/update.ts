@@ -10,7 +10,7 @@ export const updateComment = requiredAuth<MutationResolvers['updateComment']>(as
   }
   const comment = await CommentModel.findById(_id);
 
-  if (comment.createdBy !== auth.userId) {
+  if (comment.createdBy.toString() !== auth.userId) {
     throw makeGraphqlError('You can only update your own comments', ErrorCodes.BadUserInput);
   }
 
