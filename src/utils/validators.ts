@@ -1,5 +1,5 @@
 import { EMAIL_REGEX } from '@constants/reg';
-import { ChangePasswordInput, CreateAuthorInput, CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateAuthorInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
+import { CreateFavouriteBookInput, ChangePasswordInput, CreateAuthorInput, CreateBookInput, CreateCategoryInput, CreateFeatureInput, CreatePublisherInput, MutationLoginInput, RegisterInput, UpdateAuthorInput, UpdateBookInput, UpdateCategoryInput, UpdateFeatureInput, UpdatePublisherInput, VerifyEmailInput } from '@graphql/types/generated-graphql-types';
 import { isNaN } from 'lodash';
 
 export const validatorRegister = (input: RegisterInput) => {
@@ -188,6 +188,16 @@ export const validatorChangePassword = (input: ChangePasswordInput) => {
     error.message = 'Old password is required';
   } else if (oldPassword.trim().length < 6) {
     error.message = 'Old password must be at least 6 characters';
+  } else error = {};
+
+  return { error, isValid: Object.keys(error).length < 1 };
+};
+
+export const validatorFavourite = (input: CreateFavouriteBookInput) => {
+  const { bookId } = input;
+  let error: any = {};
+  if (bookId.trim().length === 0) {
+    error.message = 'bookId is required';
   } else error = {};
 
   return { error, isValid: Object.keys(error).length < 1 };
