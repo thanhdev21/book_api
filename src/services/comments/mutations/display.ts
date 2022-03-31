@@ -18,7 +18,7 @@ export const hideComment = requiredAuth<MutationResolvers['hideComment']>(async 
 
   await comment.save().then((res) => CommentModel.findById(res._id).populate(['createdBy']).exec());
   CommentUpdatedPubsub.publish(comment);
-  return comment;
+  return true;
 });
 
 export const unhideComment = requiredAuth<MutationResolvers['unhideComment']>(async (_, { _id }, { auth }) => {
@@ -33,5 +33,5 @@ export const unhideComment = requiredAuth<MutationResolvers['unhideComment']>(as
 
   await comment.save().then((res) => CommentModel.findById(res._id).populate(['createdBy']).exec());
   CommentUpdatedPubsub.publish(comment);
-  return comment;
+  return true;
 });
