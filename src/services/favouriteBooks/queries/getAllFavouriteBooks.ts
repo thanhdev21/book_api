@@ -9,7 +9,18 @@ export const getAllFavouriteBooks = requiredAuth<QueryResolvers['getAllFavourite
     .limit(limit)
     .skip(page)
     .sort({ createdAt: 'desc' })
-    .populate([{ path: 'book', match: { deletedAt: null } }])
+    .populate([
+      {
+        path: 'book',
+        match: { deletedAt: null },
+        populate: [
+          { path: 'categories', match: { deletedAt: null }, model: 'Category' },
+          { path: 'coverPhoto', match: { deleteAt: null }, model: 'Media' },
+          { path: 'content', match: { deleteAt: null }, model: 'Media' },
+          { path: 'uploadedBy', model: 'User' },
+        ],
+      },
+    ])
     .exec();
   const totalItem = await FavouriteBookModel.find({ favouriteBy: auth.userId }).count();
   const FavouriteBook: FavouriteBooks = {
